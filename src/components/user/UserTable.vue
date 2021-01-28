@@ -1,4 +1,10 @@
 <template>
+    <div class="sufee-alert alert with-close alert-success alert-dismissible fade show" v-if="!is_succ_hide">
+        <span class="badge badge-pill badge-success">Success</span> Data has been deleted.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="closeSucc">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <!-- DATA TABLE -->
@@ -64,8 +70,8 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody v-for="user in users" v-bind:key="user">
-                        <tr class="tr-shadow" v-bind:id="'user-id-' + user.id">
+                    <tbody >
+                        <tr v-for="user in users" v-bind:key="user" class="tr-shadow" v-bind:id="'user-id-' + user.id">
                             <td>
                                 <label class="au-checkbox">
                                     <input type="checkbox">
@@ -138,7 +144,8 @@ export default {
     data() {
         return {
             users : null,
-            deleted : false
+            deleted : false,
+            is_succ_hide : true,
         }
     },
     methods: {
@@ -165,6 +172,7 @@ export default {
                 this.deleted = response
                 modal.modal('hide')
                 userId.remove()
+                this.is_succ_hide = false
             })
             .catch(err => {
                 console.log(err)
