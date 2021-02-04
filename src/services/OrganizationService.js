@@ -23,81 +23,8 @@ export default {
 
         return {headers: header}
     },
-    // retrieve all users 
-    user_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/list',this.httpHeader())
-            .then(response => {
-                resolve(response.data);
-            })
-            .catch(error => {
-                reject(error);
-            });
-        });
-    },
-    // get a user
-    get_user(id) {
-        return new Promise((resolve, reject) => {
-            axios.get('/users/' + id, this.httpHeader)
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        })
-    },
-    // create a user
-    create_user(data) {
-        return new Promise((resolve, reject) => {
-            axios.post('/users', data, this.httpHeader())
-            .then(response => {
-                resolve(response.data);
-            })
-            .catch(err => {
-                reject(err);
-            })
-        });
-    },
-    //update user
-    update_user(data, id) {
-        return new Promise((resolve, reject) => {
-            axios.put('/users/' + id, data, this.httpHeader())
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        });
-    },
-    // Delete user
-    delete_user(id) {
-        return new Promise((resolve, reject) => {
-            axios.delete('/users/' + id, this.httpHeader())
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        });
-    },
-    // Get all reference
-    reference_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/list', this.httpHeader())
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        });
-    },
-
-    // Organization
-    organization_list() {
+    // retrieve all organizations 
+    all_organizations() {
         return new Promise((resolve, reject) => {
             axios.get('/organizations',this.httpHeader())
             .then(response => {
@@ -108,10 +35,34 @@ export default {
             });
         });
     },
-    // Role
-    role_list() {
+    // get a organization
+    get_organization(id) {
         return new Promise((resolve, reject) => {
-            axios.get('/roles', this.httpHeader())
+            axios.get('/organizations/' + id, this.httpHeader)
+            .then(response => {
+                resolve(response.data)
+            })
+            .catch(err => {
+                reject(err)
+            })
+        })
+    },
+    // create a organization
+    create_organization(data) {
+        return new Promise((resolve, reject) => {
+            axios.post('/organizations', data, this.httpHeader())
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(err => {
+                reject(err);
+            })
+        });
+    },
+    //update organization
+    update_organization(data, id) {
+        return new Promise((resolve, reject) => {
+            axios.put('/organizations/' + id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -119,5 +70,17 @@ export default {
                 reject(err)
             })
         });
-    }
+    },
+    // Delete organization
+    delete_organization(id) {
+        return new Promise((resolve, reject) => {
+            axios.delete('/organizations/' + id, this.httpHeader())
+            .then(response => {
+                resolve(response.data)
+            })
+            .catch(err => {
+                reject(err)
+            })
+        });
+    },
 }

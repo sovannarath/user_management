@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import RoleTable from "../components/role/RoleTable.vue"
+import RoleTable from "../../components/role/RoleTable.vue"
 export default {
     name:"Role",
     components: {

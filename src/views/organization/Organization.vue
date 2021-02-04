@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import OrganizationTable from '../components/organization/OrganizationTable.vue'
+import OrganizationTable from '../../components/organization/OrganizationTable.vue'
 export default {
     name: "Organization",
     components: {

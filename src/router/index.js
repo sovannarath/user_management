@@ -2,11 +2,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import User from '../views/users/User.vue'
 import UserForm from '../views/users/UserForm.vue'
-import Role from '../views/Role.vue'
-import Organization from '../views/Organization.vue'
-import Contact from '../views/Contact.vue'
-import ContactType from '../views/ContactType.vue'
-import ContactProvider from '../views/ContactProvider.vue'
+import Role from '../views/role/Role.vue'
+import RoleForm from '../views/role/Form.vue'
+import Organization from '../views/organization/Organization.vue'
+import OrganizationForm from '../views/organization/Form.vue'
+import Contact from '../views/user_contact/Contact.vue'
+import FormContact from '../views/user_contact/Form.vue'
+import ContactType from '../views/contact_type/ContactType.vue'
+import FormContactType from '../views/contact_type/Form.vue'
+import ContactProvider from '../views/contact_provider/ContactProvider.vue'
+import FormContactProvider from '../views/contact_provider/Form.vue'
 import Project from '../views/Project.vue'
 import ProjectType from '../views/ProjectType.vue'
 import Meeting from '../views/Meeting.vue'
@@ -50,9 +55,29 @@ const routes = [
     component: Role
   },
   {
+    path: '/roles/create',
+    name: 'RoleForm',
+    component: RoleForm
+  },
+  {
+    path: '/roles/:id/edit',
+    name: 'RoleFormEdit',
+    component: RoleForm
+  },
+  {
     path: '/organizations',
     name: 'Organization',
     component: Organization
+  },
+  {
+    path: '/organizations/create',
+    name: 'CreateOrganization',
+    component: OrganizationForm
+  },
+  {
+    path: '/organizations/:id/edit',
+    name: 'EditOrganization',
+    component: OrganizationForm
   },
   {
     path: '/contacts',
@@ -60,14 +85,44 @@ const routes = [
     component: Contact
   },
   {
+    path: '/contacts/create',
+    name: 'FormContact',
+    component: FormContact
+  },
+  {
+    path: '/contacts/:id/edit',
+    name: 'EditContact',
+    component: FormContact
+  },
+  {
     path: '/contact-types',
     name: 'ContactType',
     component: ContactType
   },
   {
+    path: '/contact-types/create',
+    name: 'FormContactType',
+    component: FormContactType
+  },
+  {
+    path: '/contact-types/:id/edit',
+    name: 'EditContactType',
+    component: FormContactType
+  },
+  {
     path: '/contact-providers',
     name: 'ContactProvider',
     component: ContactProvider
+  },
+  {
+    path: '/contact-providers/create',
+    name: 'FormContactProvider',
+    component: FormContactProvider
+  },
+  {
+    path: '/contact-providers/:id/edit',
+    name: 'EditCotnactProvider',
+    component: FormContactProvider
   },
   {
     path: '/projects',

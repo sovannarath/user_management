@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ContactTypeTable from '../components/contact/type/TypeTable.vue'
+import ContactTypeTable from '../../components/contact/type/TypeTable'
 export default {
     name: 'ContactType',
     components: {

@@ -23,10 +23,10 @@ export default {
 
         return {headers: header}
     },
-    // retrieve all users 
-    user_list() {
+    // retrieve all roles 
+    role_list() {
         return new Promise((resolve, reject) => {
-            axios.get('/list',this.httpHeader())
+            axios.get('/roles',this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -35,10 +35,10 @@ export default {
             });
         });
     },
-    // get a user
-    get_user(id) {
+    // get a role
+    get_role(id) {
         return new Promise((resolve, reject) => {
-            axios.get('/users/' + id, this.httpHeader)
+            axios.get('/roles/' + id, this.httpHeader)
             .then(response => {
                 resolve(response.data)
             })
@@ -47,10 +47,10 @@ export default {
             })
         })
     },
-    // create a user
-    create_user(data) {
+    // create a role
+    create_role(data) {
         return new Promise((resolve, reject) => {
-            axios.post('/users', data, this.httpHeader())
+            axios.post('/roles', data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -59,10 +59,10 @@ export default {
             })
         });
     },
-    //update user
-    update_user(data, id) {
+    //update role
+    update_role(data, id) {
         return new Promise((resolve, reject) => {
-            axios.put('/users/' + id, data, this.httpHeader())
+            axios.put('/roles/' + id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -71,10 +71,10 @@ export default {
             })
         });
     },
-    // Delete user
-    delete_user(id) {
+    // Delete role
+    delete_role(id) {
         return new Promise((resolve, reject) => {
-            axios.delete('/users/' + id, this.httpHeader())
+            axios.delete('/roles/' + id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -83,41 +83,4 @@ export default {
             })
         });
     },
-    // Get all reference
-    reference_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/list', this.httpHeader())
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        });
-    },
-
-    // Organization
-    organization_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/organizations',this.httpHeader())
-            .then(response => {
-                resolve(response.data);
-            })
-            .catch(error => {
-                reject(error);
-            });
-        });
-    },
-    // Role
-    role_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/roles', this.httpHeader())
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        });
-    }
 }

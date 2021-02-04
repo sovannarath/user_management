@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ContactProviderTable from '../components/contact/provider/ProviderTable.vue'
+import ContactProviderTable from '../../components/contact/provider/ProviderTable.vue'
 export default {
     name: 'ContactProvider',
     components: {

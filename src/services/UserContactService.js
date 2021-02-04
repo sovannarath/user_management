@@ -20,13 +20,12 @@ export default {
         } else {
             header = {}
         }*/
-
         return {headers: header}
     },
-    // retrieve all users 
-    user_list() {
+    // retrieve all contact type 
+    getAllUserContacts() {
         return new Promise((resolve, reject) => {
-            axios.get('/list',this.httpHeader())
+            axios.get('/user-contacts',this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -35,10 +34,10 @@ export default {
             });
         });
     },
-    // get a user
-    get_user(id) {
+    // get a contact type
+    getUserContact(id) {
         return new Promise((resolve, reject) => {
-            axios.get('/users/' + id, this.httpHeader)
+            axios.get('/user-contacts/' + id, this.httpHeader)
             .then(response => {
                 resolve(response.data)
             })
@@ -47,10 +46,10 @@ export default {
             })
         })
     },
-    // create a user
-    create_user(data) {
+    // create a contact type
+    createUserContact(data) {
         return new Promise((resolve, reject) => {
-            axios.post('/users', data, this.httpHeader())
+            axios.post('/user-contacts', data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -59,10 +58,10 @@ export default {
             })
         });
     },
-    //update user
-    update_user(data, id) {
+    //update contact type
+    updateUserContact(data, id) {
         return new Promise((resolve, reject) => {
-            axios.put('/users/' + id, data, this.httpHeader())
+            axios.put('/user-contacts/' + id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -71,10 +70,10 @@ export default {
             })
         });
     },
-    // Delete user
-    delete_user(id) {
+    // Delete contact type
+    deleteUserContact(id) {
         return new Promise((resolve, reject) => {
-            axios.delete('/users/' + id, this.httpHeader())
+            axios.delete('/user-contacts/' + id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -83,41 +82,4 @@ export default {
             })
         });
     },
-    // Get all reference
-    reference_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/list', this.httpHeader())
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        });
-    },
-
-    // Organization
-    organization_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/organizations',this.httpHeader())
-            .then(response => {
-                resolve(response.data);
-            })
-            .catch(error => {
-                reject(error);
-            });
-        });
-    },
-    // Role
-    role_list() {
-        return new Promise((resolve, reject) => {
-            axios.get('/roles', this.httpHeader())
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        });
-    }
 }
