@@ -110,7 +110,7 @@
             <!-- END DATA TABLE -->
         </div>
     </div>
-    <!-- modal static -->
+<!-- modal static -->
 <div class="modal fade" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static">
 <div class="modal-dialog modal-sm" role="document">
 <div class="modal-content">

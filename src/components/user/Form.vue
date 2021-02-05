@@ -123,10 +123,172 @@
     </div>
 </div>
 </div>
+
+<div class="row">
+    <div class="offset-sm-2 col-sm-8">
+        <!-- USER DATA-->
+        <div class="user-data m-b-30">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3 class="title-3 m-b-30">
+                        <i class="zmdi zmdi-account-calendar"></i>user contact
+                    </h3>
+                </div>
+                <div class="col-sm-6">
+                    <button class="btn btn-sm btn-dark pull-right" style="margin-right:35px;" v-on:click="addContact()">
+                        <i class="fa fa-plus"></i> Add Contact
+                    </button>
+                </div>
+            </div>
+            <!--div class="filters m-b-45">
+                <div class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
+                    <select class="js-select2" name="property">
+                        <option selected="selected">All Properties</option>
+                        <option value="">Products</option>
+                        <option value="">Services</option>
+                    </select>
+                    <div class="dropDownSelect2"></div>
+                </div>
+                <div class="rs-select2--dark rs-select2--sm rs-select2--border">
+                    <select class="js-select2 au-select-dark" name="time">
+                        <option selected="selected">All Time</option>
+                        <option value="">By Month</option>
+                        <option value="">By Day</option>
+                    </select>
+                    <div class="dropDownSelect2"></div>
+                </div>
+            </div-->
+            <div class="table-responsive table-data">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>contact</td>
+                            <td>type</td>
+                            <td>provider</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="contacts == null">
+                            <td colspan="4"><span class="center">No data avialable.</span></td>
+                        </tr>
+                        <tr v-for="con in contacts" v-bind:key="con">
+                            <td>{{con.contact}}</td>
+                            <td>{{con.type.name}}</td>
+                            <td>{{con.provider.name}}</td>
+                            <td>
+                                <div class="table-data-feature">
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-on:click="editContact()">
+                                        <i class="zmdi zmdi-edit"></i>
+                                    </button>
+                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" v-on:click="deleteContact()" title="Delete">
+                                        <i class="zmdi zmdi-delete"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--div class="user-data__footer">
+            <button class="au-btn au-btn-load">load more</button>
+            </div-->
+        </div>
+        <!-- END USER DATA-->
+    </div>
+</div>                            
+<!-- modal medium -->
+<div class="modal fade" id="addContactFrom" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="mediumModalLabel">Medium Modal</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="email-input" class=" form-control-label">Contact</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="user_contact" name="user_contact" v-model="user_contact" placeholder="Enter contact" class="form-control">
+        <!--small class="form-text text-muted">This is a help text</small-->
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="select" class=" form-control-label">Contact Type</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <select name="contact_type_id" id="contact_type_id" v-model="contact_type_id" class="form-control" >
+            <option selected disabled>-- Select Type --</option>
+            <option v-for="type in contactTypes" v-bind:key="type" v-bind:value="type.id">{{type.name}}</option>
+        </select>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="select" class=" form-control-label">Contact Provider</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <select name="provider_id"  id="provider_id" v-model="provider_id" class="form-control">
+            <option selected disabled>-- Select Provider --</option>
+            <option v-for="provider in contactProviders" v-bind:key="provider" v-bind:value="provider.id">{{provider.name}}</option>
+        </select>
+    </div>
+</div>
+
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+<button type="button" class="btn btn-primary">Add</button>
+</div>
+</div>
+</div>
+</div>
+<!-- end modal medium -->
+<!-- modal static -->
+<div class="modal fade" id="deleteUserContact" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static">
+<div class="modal-dialog modal-sm" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="staticModalLabel">Delete</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body center">
+<p>Are you sure to delete it?</p>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+<button type="button" class="btn btn-danger btn-del" v-on:click="deleteRecord">Yes</button>
+</div>
+</div>
+</div>
+</div>
+<!-- end modal static -->
 </template>
+
+<style scoped>
+.contact-element {
+    margin-bottom: 10px;
+}
+.table-data {
+    height: auto !important;
+}
+</style>
 
 <script>
 import UserAPI from '../../services/UserService'
+import ContactTypeAPI from '../../services/ContactTypeService'
+import ContactProvider from '../../services/ContactProviderService'
+import $ from 'jquery'
 
 export default {
     name:"UserForm",
@@ -139,7 +301,6 @@ export default {
             full_name       : '',
             gender          : '',
             email           : '',
-            //date_of_birth : '',
             role_id         : '',
             organization_id : '',
             reference_id    : '',
@@ -151,7 +312,13 @@ export default {
             is_warn_hide    : true,
             is_dang_hide    : true,
             is_upd_hide     : true,
-            tmp             : null
+            tmp             : null,
+            contacts        : null,
+            contactTypes    : null,
+            contactProviders: null,
+            user_contact    : '',
+            contact_type_id : '',
+            provider_id     : ''
         }
     },
     methods: {
@@ -221,6 +388,7 @@ export default {
         getUserInformation(id) {
             UserAPI.get_user(id)
             .then(response => {
+                this.contacts = response.contacts
                 this.id                 = response.id
                 this.full_name          = response.name
                 this.gender             = response.gender
@@ -259,12 +427,41 @@ export default {
         },
         closeDang() {
             this.is_dang_hide = true
-        }
+        },
+        addContact(){
+            $('#addContactFrom').modal('show')
+        },
+        loadContactType(){
+            ContactTypeAPI.getAllContactType()
+            .then(response => {
+                this.contactTypes = response
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+        loadContactProvider() {
+            ContactProvider.getAllContactProviders()
+            .then(response => {
+                this.contactProviders = response
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+        editContact() {
+            $('#addContactFrom').modal('show')
+        },
+        deleteContact() {
+            $('#deleteUserContact').modal('show')
+        }   
     },
     mounted() {
         this.loadRoles()
         this.loadOrganizations()
         this.loadAllReference()
+        this.loadContactType()
+        this.loadContactProvider()
 
         var urlPath = window.location.pathname.split('/')
         if (urlPath[urlPath.length - 1] == 'edit'){
