@@ -135,7 +135,7 @@
                     </h3>
                 </div>
                 <div class="col-sm-6">
-                    <button class="btn btn-sm btn-dark pull-right" style="margin-right:35px;" v-on:click="addContact()">
+                    <button class="btn btn-sm btn-dark pull-right" style="margin-right:35px;" v-on:click="newContact()">
                         <i class="fa fa-plus"></i> Add Contact
                     </button>
                 </div>
@@ -168,11 +168,11 @@
                             <td></td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="contact-data">
                         <tr v-if="contacts == null">
                             <td colspan="4"><span class="center">No data avialable.</span></td>
                         </tr>
-                        <tr v-for="con in contacts" v-bind:key="con">
+                        <tr v-for="con in contacts" v-bind:key="con" v-bind:id="'contact-id' + con.id">
                             <td>{{con.contact}}</td>
                             <td>{{con.type.name}}</td>
                             <td>{{con.provider.name}}</td>
@@ -246,7 +246,7 @@
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-<button type="button" class="btn btn-primary">Add</button>
+<button type="button" class="btn btn-primary" v-on:click="addContact()">Add</button>
 </div>
 </div>
 </div>
@@ -288,6 +288,7 @@
 import UserAPI from '../../services/UserService'
 import ContactTypeAPI from '../../services/ContactTypeService'
 import ContactProvider from '../../services/ContactProviderService'
+import UserContactAPI from '../../services/UserContactService'
 import $ from 'jquery'
 
 export default {
@@ -369,7 +370,6 @@ export default {
                     this.is_dang_hide = false
                 })
                 .finally(() => {})    
-               
             }
             else {
                 UserAPI.update_user(data, this.id)
@@ -428,7 +428,7 @@ export default {
         closeDang() {
             this.is_dang_hide = true
         },
-        addContact(){
+        newContact(){
             $('#addContactFrom').modal('show')
         },
         loadContactType(){
@@ -449,10 +449,56 @@ export default {
                 console.log(err)
             })
         },
-        editContact() {
+        addContact(){
+            var recordContainer = $('.contact-data')
+            var data = {}
+            data['user'] = {'id' : this.id}
+            data['contact'] = this.user_contact
+            data['type'] = {'id': this.contact_type_id}
+            if(this.provider_id != '')
+                data['provider'] = {'id' : this.provider_id }
+
+            UserContactAPI.createUserContact(data)
+            .then(response => {
+                UserContactAPI.getUserContact(response.id)
+                .then(contact => {
+                    console.log(contact)
+                    var tr = $('<tr></tr>')
+                    var tdContact = $('<td></td>')
+                    var tdType = $('<td></td>')
+                    var tdProvider = $('<td></td>')
+                    var tdButton = $("<td></td>")
+                    var divBtnFeature = $('<div class="table-data-feature"></div>')
+                    var btnEdit = $('<button class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-on:click="editContact(response.id )"><i class="zmdi zmdi-edit"></i></button>')             
+                    var btnDelete = $('<button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" v-on:click="deleteContact(response.id)" title="Delete"><i class="zmdi zmdi-delete"></i></button>')            
+                     
+                    btnEdit.on('click', this.editContact(response.id))
+                    btnDelete.on('click', this.deleteContact(response.id))
+
+                    tdContact.text(contact.contact)
+                    tdType.text(contact.type.name)
+                    tdProvider.text(contact.provider.name)
+                    divBtnFeature.append(btnEdit)
+                    divBtnFeature.append(btnDelete)
+                    tdButton.append(divBtnFeature)
+                    tr.append(tdContact, tdType, tdProvider, tdButton)
+                    recordContainer.append(tr)
+                    $('#addContactFrom').modal('hide')
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+        editContact(id) {
+            console.log(id)
             $('#addContactFrom').modal('show')
         },
-        deleteContact() {
+        deleteContact(id) {
+            console.log(id)
             $('#deleteUserContact').modal('show')
         }   
     },
