@@ -116,7 +116,6 @@ export default {
         loadAllContacts() {
             ContactAPI.getAllUserContacts()
             .then(response => {
-                console.log(response)
                 this.contacts = response
             })
             .catch(err => {console.log(err)})
