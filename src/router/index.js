@@ -13,7 +13,8 @@ import FormContactType from '../views/contact_type/Form.vue'
 import ContactProvider from '../views/contact_provider/ContactProvider.vue'
 import FormContactProvider from '../views/contact_provider/Form.vue'
 import Project from '../views/Project.vue'
-import ProjectType from '../views/ProjectType.vue'
+import ProjectType from '../views/project_type/ProjectType.vue'
+import FormProjectType from '../views/project_type/Form.vue'
 import Meeting from '../views/Meeting.vue'
 import MeetingType from '../views/MeetingType.vue'
 import MeetingAction from '../views/MeetingAction.vue'
@@ -133,6 +134,16 @@ const routes = [
     path: '/project-types',
     name: 'ProjectType',
     component: ProjectType
+  },
+  {
+    path: '/project-types/create',
+    name: 'CreateProjectType',
+    component: FormProjectType
+  },
+  {
+    path: '/project-type/:id/edit',
+    name: 'EditProjectType',
+    component: FormProjectType
   },
   {
     path: '/meetings',
