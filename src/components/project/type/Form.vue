@@ -62,7 +62,7 @@
                 </form>
             </div>
             <div class="card-footer">
-                <button type="submit" v-on:click="createOrUpdateContactType()" class="btn btn-primary btn-sm">
+                <button type="submit" v-on:click="createOrUpdateProjectType()" class="btn btn-primary btn-sm">
                     <i class="fa fa-dot-circle-o"></i> Submit
                 </button>
             </div>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import ContactTypeAPI from '../../../services/ContactTypeService'
+import ProjectTypeAPI from '../../../services/ProjectTypeService'
 
 export default {
     name: 'ContactTypeForm',
@@ -93,13 +93,13 @@ export default {
         }
     },
     methods : {
-        createOrUpdateContactType() {
+        createOrUpdateProjectType() {
             var data = {}
             data['name'] = this.name
             data['description'] = this.description
             
             if(this.id == ''){
-                ContactTypeAPI.createContactType(data)
+                ProjectTypeAPI.createProjectType(data)
                 .then(response => {
                     this.id = response.id
                     this.is_succ_hide = false
@@ -108,11 +108,10 @@ export default {
                     console.log(err)
                     this.is_dang_hide = false
                 })
-                .finally(() => {})    
-               
+                .finally(() => {})
             }
             else {
-                ContactTypeAPI.updateContactType(data, this.id)
+                ProjectTypeAPI.updateProjectType(data, this.id)
                 .then(response => {
                     this.tmp = response
                     this.is_upd_hide = false
@@ -122,11 +121,10 @@ export default {
                     this.is_dang_hide = false
                 })
                 .finally(() => {})
-               
             } 
         },
-        getContactTypeInformation(id) {
-            ContactTypeAPI.getContactType(id)
+        getProjectTypeInformation(id) {
+            ProjectTypeAPI.getProjectType(id)
             .then(response => {
                 this.id = response.id
                 this.name = response.name
@@ -156,7 +154,7 @@ export default {
     mounted() {
         var urlPath = window.location.pathname.split('/')
         if (urlPath[urlPath.length - 1] == 'edit'){
-            this.getContactTypeInformation(urlPath[urlPath.length - 2])
+            this.getProjectTypeInformation(urlPath[urlPath.length - 2])
         }
     },
 }

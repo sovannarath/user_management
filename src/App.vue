@@ -92,8 +92,8 @@
       <!-- END PAGE CONTAINER-->
     </div>
   </div>
-  <div class="">
-    <!-- Sidebar -->
+  <!--div class="">
+    < Sidebar >
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3>Bootstrap Sidebar</h3>
@@ -129,7 +129,7 @@
         </ul>
     </nav>
 
-</div>
+</div-->
 
 </template>
 

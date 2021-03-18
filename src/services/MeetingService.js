@@ -17,18 +17,19 @@ const no_timeout_http = Axios.create({
 export default {
     httpHeader() {
         let header = {};
-        /*if (window.$cookies.isKey('access_token')) {
+        /*
+        if (window.$cookies.isKey('access_token')) {
             header = {Authorization: "Bearer " + jwt.verify(cookie.get('access_token'), key).access_token};
         } else {
             header = {}
-        }*/
-
+        }
+        */
         return {headers: header}
     },
-    // retrieve all organizations 
-    allProjectTypes() {
+    // retrieve all organizations
+    allMeetings() {
         return new Promise((resolve, reject) => {
-            axios.get('/project-types',this.httpHeader())
+            axios.get('/meetings',this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -38,9 +39,9 @@ export default {
         });
     },
     // get a organization
-    getProjectType(id) {
+    getMeeting(id) {
         return new Promise((resolve, reject) => {
-            axios.get('/project-types/' + id, this.httpHeader)
+            axios.get('/meetings/' + id, this.httpHeader)
             .then(response => {
                 resolve(response.data)
             })
@@ -50,9 +51,9 @@ export default {
         })
     },
     // create a organization
-    createProjectType(data) {
+    createMeeting(data) {
         return new Promise((resolve, reject) => {
-            axios.post('/project-types', data, this.httpHeader())
+            axios.post('/meetings', data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -62,9 +63,9 @@ export default {
         });
     },
     //update organization
-    updateProjectType(data, id) {
+    updateMeeting(data, id) {
         return new Promise((resolve, reject) => {
-            axios.put('/project-types/' + id, data, this.httpHeader())
+            axios.put('/meetings/' + id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -74,9 +75,9 @@ export default {
         });
     },
     // Delete organization
-    deleteProjectType(id) {
+    deleteMeeting(id) {
         return new Promise((resolve, reject) => {
-            axios.delete('/project-types/' + id, this.httpHeader())
+            axios.delete('/meetings/' + id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import MeetingTable from '../components/Meeting/MeetingTable.vue'
+import MeetingTable from '../../components/Meeting/MeetingTable.vue'
 export default {
     name:'Meeting',
     components: {

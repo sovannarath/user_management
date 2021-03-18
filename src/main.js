@@ -22,6 +22,7 @@ import './assets/css/theme.css'
 
 // Images
 import './assets/images/icon/logo.png'
+import './assets/images/icon/avatar-02.jpg'
 
 // Declare global variable
 window.serverHost = 'http://localhost:8888'

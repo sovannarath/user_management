@@ -13,16 +13,19 @@ import FormContactType from '../views/contact_type/Form.vue'
 import ContactProvider from '../views/contact_provider/ContactProvider.vue'
 import FormContactProvider from '../views/contact_provider/Form.vue'
 import Project from '../views/Project.vue'
+import FormProject from '../views/project/Form.vue'
 import ProjectType from '../views/project_type/ProjectType.vue'
 import FormProjectType from '../views/project_type/Form.vue'
-import Meeting from '../views/Meeting.vue'
+import Meeting from '../views/meeting/Meeting.vue'
+import FormMeeting from '../views/meeting/Form.vue'
 import MeetingType from '../views/MeetingType.vue'
 import MeetingAction from '../views/MeetingAction.vue'
 import MeetingActionType from '../views/MeetingActionType.vue'
 import MeetingParticipant from '../views/MeetingParticipant.vue'
 
 const routes = [
-  /*{
+  /*
+  {
     path: '/',
     name: 'Home',
     component: Home
@@ -34,7 +37,8 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" *//* '../views/About.vue')
-  },*/
+  },
+  */
   {
     path: '/users',
     name: 'User',
@@ -131,6 +135,16 @@ const routes = [
     component: Project
   },
   {
+    path: '/projects/create',
+    name: 'CreateProject',
+    component: FormProject
+  },
+  {
+    path: '/projects/:id/edit',
+    name: 'EditProject',
+    component: FormProject
+  },
+  {
     path: '/project-types',
     name: 'ProjectType',
     component: ProjectType
@@ -141,7 +155,7 @@ const routes = [
     component: FormProjectType
   },
   {
-    path: '/project-type/:id/edit',
+    path: '/project-types/:id/edit',
     name: 'EditProjectType',
     component: FormProjectType
   },
@@ -149,6 +163,16 @@ const routes = [
     path: '/meetings',
     name: 'Meeting',
     component: Meeting
+  },
+  {
+    path: '/meetings/create',
+    name: 'CreateMeeting',
+    component: FormMeeting
+  },
+  {
+    path: '/meetings/:id/edit',
+    name: 'EditMeeting',
+    component: FormMeeting
   },
   {
     path: '/meeting-types',

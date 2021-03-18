@@ -119,5 +119,16 @@ export default {
                 reject(err)
             })
         });
+    },
+    search(data) {
+        return new Promise((resolve, reject) => {
+            axios.get('/users/search', {params: data}, this.httpHeader())
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(err => {
+                reject(err);
+            })
+        });
     }
 }

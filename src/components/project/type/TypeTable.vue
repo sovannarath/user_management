@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody >
-                        <tr v-for="type in contactTypes" v-bind:key="type" class="tr-shadow" v-bind:id="'type-id-' + type.id">
+                        <tr v-for="type in projectTypes" v-bind:key="type" class="tr-shadow" v-bind:id="'type-id-' + type.id">
                             <td>
                                 <label class="au-checkbox">
                                     <input type="checkbox">
@@ -51,7 +51,7 @@
                                     <!--button class="item" data-toggle="tooltip" data-placement="top" title="Send">
                                         <i class="zmdi zmdi-mail-send"></i>
                                     </button-->
-                                    <router-link class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-bind:to="'/contact-types/'+type.id+'/edit'">
+                                    <router-link class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-bind:to="'/project-types/'+type.id+'/edit'">
                                         <i class="zmdi zmdi-edit"></i>
                                     </router-link>
                                     <!--button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import ContactTypeAPI from '../../../services/ContactTypeService'
+import ProjectTypeAPI from '../../../services/ProjectTypeService'
 import $ from 'jquery'
 
 export default {
@@ -106,21 +106,21 @@ export default {
     },
     data() {
         return {
-            contactTypes: null,
+            projectTypes: null,
             is_succ_hide: true
         }
     },
     methods: {
-        loadContactTypes() {
-            ContactTypeAPI.getAllContactType()
+        loadProjectTypes() {
+            ProjectTypeAPI.allProjectTypes()
             .then(response => {
-                this.contactTypes = response
+                this.projectTypes = response
             })
             .catch(err => {
                 console.log(err)
             })
             .finally(() => {})
-        }, 
+        },
         btnDelClick(userId) {
             var thisBtn = $('#tmp-btn-del-' + userId);
             var modal = $('#delContactTypeModal');
@@ -131,7 +131,7 @@ export default {
             var id = $('.btn-del').attr('value')
             var modal = $('#delContactTypeModal');
             var typeId = $('#type-id-' + id)
-            ContactTypeAPI.deleteContactType(id)
+            ProjectTypeAPI.deleteProjectType(id)
             .then(response => {
                 this.deleted = response
                 modal.modal('hide')
@@ -145,7 +145,7 @@ export default {
         }
     },
     mounted() {
-        this.loadContactTypes()
+        this.loadProjectTypes()
     }
 }
 </script>

@@ -26,9 +26,9 @@ export default {
         return {headers: header}
     },
     // retrieve all organizations 
-    allProjectTypes() {
+    allProjects() {
         return new Promise((resolve, reject) => {
-            axios.get('/project-types',this.httpHeader())
+            axios.get('/projects',this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -38,9 +38,9 @@ export default {
         });
     },
     // get a organization
-    getProjectType(id) {
+    getProject(id) {
         return new Promise((resolve, reject) => {
-            axios.get('/project-types/' + id, this.httpHeader)
+            axios.get('/projects/' + id, this.httpHeader)
             .then(response => {
                 resolve(response.data)
             })
@@ -50,9 +50,9 @@ export default {
         })
     },
     // create a organization
-    createProjectType(data) {
+    createProject(data) {
         return new Promise((resolve, reject) => {
-            axios.post('/project-types', data, this.httpHeader())
+            axios.post('/projects', data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -62,9 +62,9 @@ export default {
         });
     },
     //update organization
-    updateProjectType(data, id) {
+    updateProject(data, id) {
         return new Promise((resolve, reject) => {
-            axios.put('/project-types/' + id, data, this.httpHeader())
+            axios.put('/projects/' + id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -74,9 +74,9 @@ export default {
         });
     },
     // Delete organization
-    deleteProjectType(id) {
+    deleteProject(id) {
         return new Promise((resolve, reject) => {
-            axios.delete('/project-types/' + id, this.httpHeader())
+            axios.delete('/projects/' + id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
