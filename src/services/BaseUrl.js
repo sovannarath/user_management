@@ -1,3 +1,3 @@
 export default {
-    url: 'http://localhost:8888'
+    url: 'http://192.168.88.12:8888'
 }

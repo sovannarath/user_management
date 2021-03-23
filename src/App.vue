@@ -8,7 +8,8 @@
     <aside class="menu-sidebar d-none d-lg-block">
       <div class="logo">
         <a href="#">
-          <img src="../src/assets/images/icon/logo.png" alt="Cool Admin" />
+          <h3>ZILLENNIUM</h3>
+          SECRETARY OFFICE
         </a>
       </div>
       <div class="menu-sidebar__content js-scrollbar1">

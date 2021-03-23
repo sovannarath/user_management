@@ -5,74 +5,79 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <!-- DATA TABLE -->
-            <div class="row">
-                <div class="col-sm-6">
-                    <h1 class="title-10 m-b-35">Contact Types</h1>
-                </div>
-                <div class="col-sm-6">
-                    <router-link class="btn btn-sm btn-primary pull-right" to="/contact-types/create">
-                        <i class="fa fa-plus"></i> New Record
-                    </router-link>
-                </div>
-            </div>
 
-            <div class="table-responsive table-responsive-data2">
-                <table class="table table-data2">
-                    <thead>
-                        <tr>
-                            <th>
-                                <label class="au-checkbox">
-                                    <input type="checkbox">
-                                    <span class="au-checkmark"></span>
-                                </label>
-                            </th>
-                            <th>name</th>
-                            <th>description</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody >
-                        <tr v-for="type in contactTypes" v-bind:key="type" class="tr-shadow" v-bind:id="'type-id-' + type.id">
-                            <td>
-                                <label class="au-checkbox">
-                                    <input type="checkbox">
-                                    <span class="au-checkmark"></span>
-                                </label>
-                            </td>
-                            <td>{{type.name}}</td>
-                            <td>{{type.description}}</td>
-                            <td>{{type.is_active}}</td>
-                            <td>
-                                <div class="table-data-feature">
-                                    <!--button class="item" data-toggle="tooltip" data-placement="top" title="Send">
-                                        <i class="zmdi zmdi-mail-send"></i>
-                                    </button-->
-                                    <router-link class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-bind:to="'/contact-types/'+type.id+'/edit'">
-                                        <i class="zmdi zmdi-edit"></i>
-                                    </router-link>
-                                    <!--button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
-                                        <i class="zmdi zmdi-edit"></i>
-                                    </button-->
-                                    <button class="item tmp-btn-del" v-bind:id="'tmp-btn-del-' + type.id" data-toggle="tooltip" v-bind:value="type.id" data-placement="top" v-on:click="btnDelClick(type.id)" title="Delete">
-                                        <i class="zmdi zmdi-delete"></i>
-                                    </button>
-                                    <!--button class="item" data-toggle="tooltip" data-placement="top" title="More">
-                                        <i class="zmdi zmdi-more"></i>
-                                    </button-->
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- END DATA TABLE -->
+<div class="user-data m-b-30">
+  <h3 class="title-3 m-b-30 pull-left"><i class="zmdi zmdi-account-calendar"></i>Contact Types</h3>
+  <router-link style="margin-right:35px;" class="btn btn-sm btn-primary pull-right" to="/contact-types/create">
+    <i class="fa fa-plus"></i> New Record
+  </router-link>
+    <!--div class="filters m-b-45">
+        <div class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
+            <select class="js-select2" name="property">
+                <option selected="selected">All Properties</option>
+                <option value="">Products</option>
+                <option value="">Services</option>
+            </select>
+            <div class="dropDownSelect2"></div>
         </div>
+        <div class="rs-select2--dark rs-select2--sm rs-select2--border">
+            <select class="js-select2 au-select-dark" name="time">
+                <option selected="selected">All Time</option>
+                <option value="">By Month</option>
+                <option value="">By Day</option>
+            </select>
+            <div class="dropDownSelect2"></div>
+        </div>
+    </div-->
+
+    <div class="table-responsive table-data">
+        <table class="table">
+            <thead>
+                <tr>
+                  <td>
+                    <label class="au-checkbox">
+                      <input type="checkbox">
+                      <span class="au-checkmark"></span>
+                    </label>
+                  </td>
+                  <td>name</td>
+                  <td>description</td>
+                  <td>Status</td>
+                  <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="type in contactTypes" v-bind:key="type" v-bind:id="'type-id-' + type.id">
+                  <td>
+                    <label class="au-checkbox">
+                      <input type="checkbox">
+                      <span class="au-checkmark"></span>
+                      </label>
+                  </td>
+                  <td>{{type.name}}</td>
+                  <td>{{type.description}}</td>
+                  <td>{{type.is_active}}</td>
+                  <td>
+                    <div class="table-data-feature">
+                        <router-link class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-bind:to="'/contact-types/'+type.id+'/edit'">
+                            <i class="zmdi zmdi-edit"></i>
+                        </router-link>
+                        <button class="item tmp-btn-del" v-bind:id="'tmp-btn-del-' + type.id" data-toggle="tooltip" v-bind:value="type.id" data-placement="top" v-on:click="btnDelClick(type.id)" title="Delete">
+                            <i class="zmdi zmdi-delete"></i>
+                        </button>
+                    </div>
+                  </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <!-- modal static -->
+    <!---div class="user-data__footer">
+        <button class="au-btn au-btn-load">load more</button>
+    </div-->
+</div>
+<!-- END USER DATA-->
+
+<!-- modal static -->
 <div class="modal fade" id="delContactTypeModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static">
 <div class="modal-dialog modal-sm" role="document">
 <div class="modal-content">

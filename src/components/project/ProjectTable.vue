@@ -5,43 +5,54 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <!-- DATA TABLE -->
-            <div class="row">
-                <div class="col-sm-6">
-                    <h1 class="title-10 m-b-35">Projects</h1>
-                </div>
-                <div class="col-sm-6">
-                    <router-link class="btn btn-sm btn-primary pull-right" to="/projects/create">
-                        <i class="fa fa-plus"></i> New Record
-                    </router-link>
-                </div>
-            </div>
 
-            <div class="table-responsive table-responsive-data2">
-                <table class="table table-data2">
-                    <thead>
-                        <tr>
-                            <th>
-                                <label class="au-checkbox">
-                                    <input type="checkbox">
-                                    <span class="au-checkmark"></span>
-                                </label>
-                            </th>
-                            <th>Name</th>
-                            <th>Purpose</th>
-                            <th>Description</th>
-                            <th>Type</th>
-                            <th>Organization</th>
-                            <th>Manager</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody >
-                        <tr v-for="project in projects" v-bind:key="project.id" class="tr-shadow" v-bind:id="'project-id-' + project.id">
+<div class="user-data m-b-30">
+  <h3 class="title-3 m-b-30 pull-left"><i class="zmdi zmdi-account-calendar"></i>Projects</h3>
+  <router-link style="margin-right:35px;" class="btn btn-sm btn-primary pull-right" to="/projects/create">
+    <i class="fa fa-plus"></i> New Record
+  </router-link>
+    <!--div class="filters m-b-45">
+        <div class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
+            <select class="js-select2" name="property">
+                <option selected="selected">All Properties</option>
+                <option value="">Products</option>
+                <option value="">Services</option>
+            </select>
+            <div class="dropDownSelect2"></div>
+        </div>
+        <div class="rs-select2--dark rs-select2--sm rs-select2--border">
+            <select class="js-select2 au-select-dark" name="time">
+                <option selected="selected">All Time</option>
+                <option value="">By Month</option>
+                <option value="">By Day</option>
+            </select>
+            <div class="dropDownSelect2"></div>
+        </div>
+    </div-->
+
+    <div class="table-responsive table-data">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>
+                        <label class="au-checkbox">
+                            <input type="checkbox">
+                            <span class="au-checkmark"></span>
+                        </label>
+                    </td>
+                            <td>Name</td>
+                            <td>Purpose</td>
+                            <td>Description</td>
+                            <td>Type</td>
+                            <td>Organization</td>
+                            <td>Manager</td>
+                            <td>Start Date</td>
+                            <td>End Date</td>
+                            <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                        <tr v-for="project in projects" v-bind:key="project.id" v-bind:id="'project-id-' + project.id">
                             <td>
                                 <label class="au-checkbox">
                                     <input type="checkbox">
@@ -76,13 +87,16 @@
                                 </div>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- END DATA TABLE -->
-        </div>
+            </tbody>
+        </table>
     </div>
-    <!-- modal static -->
+    <!---div class="user-data__footer">
+        <button class="au-btn au-btn-load">load more</button>
+    </div-->
+</div>
+<!-- END USER DATA-->
+
+<!-- modal static -->
 <div class="modal fade" id="delContactTypeModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static">
 <div class="modal-dialog modal-sm" role="document">
 <div class="modal-content">
