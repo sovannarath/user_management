@@ -9,160 +9,7 @@
             </button>
         </div>
         <div class="card-body card-block">
-            <!--form action="" method="post" enctype="multipart/form-data" class="form-horizontal"-->
-
-                <div class="row">
-                    <div class="col col-md-6">
-
-                        <div class="form-group">
-                            <label for="topic" class=" form-control-label">Meeting Topic</label>
-                            <input type="topic" id="topic" v-model="topic" name="topic" placeholder="Enter meeting topic" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="project_id" class=" form-control-label">Project</label>
-                            <select v-model="project_id" name="project_id" id="project_id" class="form-control">
-                                <option disabled selected >-- Please select project --</option>
-                                <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">{{project.name}}</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="location" class=" form-control-label">Location</label>
-                            <input type="text" id="location" v-model="location" name="location" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="date" class=" form-control-label">Date</label>
-                            <input type="date" id="date" v-model="date" name="date" class="form-control">
-                        </div>
-
-                        <div class="row">
-                            <div class="col col-md-6">
-                                <div class="form-group">
-                                    <label for="start_time" class=" form-control-label">Start Time</label>
-                                    <input type="time" id="start_time" v-model="start_time" name="start_time" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col col-md-6">
-                                <div class="form-group">
-                                    <label for="end_time" class=" form-control-label">End Time</label>
-                                    <input type="time" id="end_time" v-model="end_time" name="end_time" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="objective" class=" form-control-label">Objective</label>
-                            <textarea v-model="objective" name="objective" id="objective" rows="6" placeholder="Enter objective" class="form-control"></textarea>
-                        </div>
-
-                    </div>
-                    <div class="col col-md-6">
-
-                        <div class="form-group">
-                            <label for="meeting_type_id" class=" form-control-label">Meeting Type</label>
-                            <select name="meeting_type_id" v-model="meeting_type_id" id="meeting_type_id" class="form-control">
-                                <option disabled selected value="0">Please select meeting type</option>
-                                <option v-for="meetingType in meetingTypes" v-bind:key="meetingType.id" v-bind:value="meetingType.id">{{meetingType.name}}</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="issue_number" class=" form-control-label">Issue Number</label>
-                            <input type="text" id="issue_number" v-model="issue_number" name="issue_number" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="meeting_type_id" class=" form-control-label">Meeting Status</label>
-                            <select name="meeting_type_id" v-model="meeting_type_id" id="meeting_type_id" class="form-control">
-                                <option disabled selected value="0">Please select status</option>
-                                <option>Finished</option>
-                                <option>On Hold</option>
-                                <option>Next Schedule</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="next_date" class=" form-control-label">Next Date</label>
-                            <input type="date" id="next_date" v-model="next_date" name="next_date" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="next_topic" class=" form-control-label">Next Topic</label>
-                            <input type="text" id="next_topic" v-model="next_topic" name="next_topic" placeholder="Enter next topic" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="objective" class=" form-control-label">Comment</label>
-                            <textarea v-model="objective" name="objective" id="objective" rows="6" placeholder="Enter objective" class="form-control"></textarea>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="objective" class=" form-control-label">Others</label>
-                    <textarea v-model="objective" name="objective" id="objective" rows="5" placeholder="Enter objective" class="form-control"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="conclusion" class=" form-control-label">Summary</label>
-                    <textarea v-model="conclusion" name="conclusion" id="conclusion" rows="5" placeholder="Enter conclusion" class="form-control"></textarea>
-                </div>
-
-
-                <!--div class="card-title">
-                    <h5 class="title-2">Meeting Participant</h5>
-                </div>
-                <hr>
-
-                <div class="row form-group">
-                    <div class="col col-md-6">
-                        <label for="participant" class=" form-control-label">Search</label>
-                        <input v-on:keyup="retrieveParticipant()" type="text" id="searchParticipant" v-model="searchParticipant" name="searchParticipant" placeholder="Search participant" class="form-control">
-                        <select name="participant_ids" v-model="participant_ids" id="participant_ids" multiple="" class="form-control">
-                            <option v-for="tmpDisplayParticipant in tmpDisplayParticipants" v-bind:key="tmpDisplayParticipant.id" v-bind:value="tmpDisplayParticipant.id">{{tmpDisplayParticipant.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label for="" class=" form-control-label">&nbsp;</label><br>
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="fa fa-list"></i> View List
-                        </button>
-                    </div>
-                </div>
-
-                <div class="table-responsive table--no-card m-b-40">
-                    <table class="table table-borderless table-striped table-earning">
-                        <thead>
-                            <tr>
-                                <th>Full Name</th>
-                                <th>Occupy</th>
-                                <th>Organization</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="displayParticipant in displayParticipants" v-bind:key="displayParticipant.id">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div-->
-
-
-                <!--div class="card-title">
-                    <h5 class="title-2">Meeting Actions</h5>
-                </div>
-                <hr>
-
-                <div class="au-card au-card--no-shadow au-card--no-pad m-b-40 au-card--border">
+                            <div class="au-card au-card--no-shadow au-card--no-pad m-b-40 au-card--border">
                     <div class="au-card-title" style="background-image:url('images/bg-title-01.jpg');">
                         
                         <div class="bg-overlay"></div>
@@ -280,28 +127,13 @@
                                 </div>
 
                             </div>
-      
-                            <div class="au-task__footer">
-                                <button class="au-btn au-btn-load js-load-btn">load more</button>
-                            </div>
                         </div>
-                    </div-->
-
-
-                <!--/form--->
-            </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary btn-sm pull-right" v-on:click="saveMeeting()">
-                <i class="fa fa-dot-circle-o"></i> Submit
-            </button>
-            <!--button type="reset" class="btn btn-danger btn-sm">
-                <i class="fa fa-ban"></i> Reset
-            </button-->
+                    </div>
         </div>
     </div>
     </div>
 </div>
-
+<v-jstree :data="dataList" show-checkbox multiple allow-batch whole-row @item-click="itemClick"></v-jstree>
 </template>
 
 <style scoped>
@@ -346,14 +178,87 @@ import ProjectAPI from '../../services/ProjectService'
 import MeetingTypeAPI from '../../services/MeetingTypeService'
 import MeetingActionAPI from '../../services/MeetingActionService'
 import MeetingActionTypeAPI from '../../services/MeetingActionTypeService'
+import VJstree from 'vue-jstree'
 
 export default {
-    name: 'Form',
+    name: 'DiscussionLog',
     components: {
-        
+        VJstree
     },
     data () {
         return {
+            dataList                : [
+                                {
+                    "text": "Same but with checkboxes",
+                    "children": [
+                        {
+                            "text": "initially selected",
+                            "selected": true
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-danger"
+                        },
+                        {
+                            "text": "initially open",
+                            "icon": "fa fa-folder icon-state-default",
+                            "opened": true,
+                            "children": [
+                                {
+                                    "text": "Another node"
+                                }             
+                            ]
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-warning"
+                        },
+                        {
+                            "text": "disabled node",
+                            "icon": "fa fa-check icon-state-success",
+                            "disabled": true
+                        }
+                    ]
+                },
+
+                {
+                    "text": "Same but with checkboxes",
+                    "opened": true,
+                    "children": [
+                        {
+                            "text": "initially selected",
+                            "selected": true
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-danger"
+                        },
+                        {
+                            "text": "initially open",
+                            "icon": "fa fa-folder icon-state-default",
+                            "opened": true,
+                            "children": [
+                                {
+                                    "text": "Another node"
+                                }
+                            ]
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-warning"
+                        },
+                        {
+                            "text": "disabled node",
+                            "icon": "fa fa-check icon-state-success",
+                            "disabled": true
+                        }
+                    ]
+                },
+
+                {
+                    "text": "And wholerow selection"
+                }
+            ],
             id                      : null,
             topic                   : null,
             meeting_type_id         : null,
@@ -391,6 +296,83 @@ export default {
         }
     },
     methods: {
+        initialDataList() {
+            this.dataList = [
+                {
+                    "text": "Same but with checkboxes",
+                    "children": [
+                        {
+                            "text": "initially selected",
+                            "selected": true
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-danger"
+                        },
+                        {
+                            "text": "initially open",
+                            "icon": "fa fa-folder icon-state-default",
+                            "opened": true,
+                            "children": [
+                                {
+                                    "text": "Another node"
+                                }             
+                            ]
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-warning"
+                        },
+                        {
+                            "text": "disabled node",
+                            "icon": "fa fa-check icon-state-success",
+                            "disabled": true
+                        }
+                    ]
+                },
+
+                {
+                    "text": "Same but with checkboxes",
+                    "opened": true,
+                    "children": [
+                        {
+                            "text": "initially selected",
+                            "selected": true
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-danger"
+                        },
+                        {
+                            "text": "initially open",
+                            "icon": "fa fa-folder icon-state-default",
+                            "opened": true,
+                            "children": [
+                                {
+                                    "text": "Another node"
+                                }
+                            ]
+                        },
+                        {
+                            "text": "custom icon",
+                            "icon": "fa fa-warning icon-state-warning"
+                        },
+                        {
+                            "text": "disabled node",
+                            "icon": "fa fa-check icon-state-success",
+                            "disabled": true
+                        }
+                    ]
+                },
+
+                {
+                    "text": "And wholerow selection"
+                }
+            ]  
+        },
+        itemClick (node) {
+          console.log(node.model.text + ' clicked !')
+        },
         saveMeeting() {
             var data                        = {};
             data['name']                    = this.topic;
@@ -499,10 +481,11 @@ export default {
         }
     },
     mounted() {
-        this.retrieveProject();
-        this.retrieveMettingType();
-        this.retrieveActionType();
-        this.relatedAction();
+        //this.retrieveProject();
+        //this.retrieveMettingType();
+        //this.retrieveActionType();
+        //this.relatedAction();
+        this.initialDataList()
     }
 }
 </script>

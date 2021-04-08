@@ -20,11 +20,24 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="meeting_type_id" class=" form-control-label">Meeting Type</label>
+                            <select name="meeting_type_id" v-model="meeting_type_id" id="meeting_type_id" class="form-control">
+                                <option disabled selected value="0">Please select meeting type</option>
+                                <option v-for="meetingType in meetingTypes" v-bind:key="meetingType.id" v-bind:value="meetingType.id">{{meetingType.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="project_id" class=" form-control-label">Project</label>
                             <select v-model="project_id" name="project_id" id="project_id" class="form-control">
                                 <option disabled selected >-- Please select project --</option>
                                 <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">{{project.name}}</option>
                             </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="issue_number" class=" form-control-label">Issue Number</label>
+                            <input type="text" id="issue_number" v-model="issue_number" name="issue_number" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -52,36 +65,29 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="objective" class=" form-control-label">Objective</label>
-                            <textarea v-model="objective" name="objective" id="objective" rows="6" placeholder="Enter objective" class="form-control"></textarea>
+                        <div class="row form-group">
+                            <div class="col col-md-12">
+                                <label class=" form-control-label">Meeting Status</label>
+                            </div>
+                            <div class="col col-md-12">
+                                <div class="form-check-inline form-check">
+                                    <label for="inline-radio1" class="form-check-label ">
+                                        <input type="radio" id="inline-radio1" v-model="status" name="status" value="FINISHED" class="form-check-input">Finished
+                                    </label>&nbsp;&nbsp;
+                                    <label for="inline-radio2" class="form-check-label ">
+                                        <input type="radio" id="inline-radio2" v-model="status" name="status" value="ONHOLD" class="form-check-input">On Hold
+                                    </label>&nbsp;&nbsp;
+                                    <label for="inline-radio3" class="form-check-label ">
+                                        <input type="radio" id="inline-radio3" v-model="status" name="status" value="NEXTSCHEDULE" class="form-check-input">Next Schedule
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                    </div>
-                    <div class="col col-md-6">
-
-                        <div class="form-group">
-                            <label for="meeting_type_id" class=" form-control-label">Meeting Type</label>
-                            <select name="meeting_type_id" v-model="meeting_type_id" id="meeting_type_id" class="form-control">
-                                <option disabled selected value="0">Please select meeting type</option>
-                                <option v-for="meetingType in meetingTypes" v-bind:key="meetingType.id" v-bind:value="meetingType.id">{{meetingType.name}}</option>
-                            </select>
+                        <div class="card-title">
+                            <h5 class="title-2">Next Schedule</h5>
                         </div>
-
-                        <div class="form-group">
-                            <label for="issue_number" class=" form-control-label">Issue Number</label>
-                            <input type="text" id="issue_number" v-model="issue_number" name="issue_number" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="meeting_type_id" class=" form-control-label">Meeting Status</label>
-                            <select name="meeting_type_id" v-model="meeting_type_id" id="meeting_type_id" class="form-control">
-                                <option disabled selected value="0">Please select status</option>
-                                <option>Finished</option>
-                                <option>On Hold</option>
-                                <option>Next Schedule</option>
-                            </select>
-                        </div>
+                        <hr>
                         
                         <div class="form-group">
                             <label for="next_date" class=" form-control-label">Next Date</label>
@@ -94,25 +100,43 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="objective" class=" form-control-label">Comment</label>
-                            <textarea v-model="objective" name="objective" id="objective" rows="6" placeholder="Enter objective" class="form-control"></textarea>
+                            <label for="next_comment" class=" form-control-label">Next Comment</label>
+                            <input type="text" id="next_comment" v-model="next_comment" name="next_comment" placeholder="Enter comment" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="col col-md-6">
+                        
+                        <div class="form-group">
+                            <label for="objective" class=" form-control-label">Objective</label>
+                            <textarea v-model="objective" name="objective" id="objective" rows="5" placeholder="Enter objective" class="form-control"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="problem" class=" form-control-label">Problem</label>
+                            <textarea v-model="problem" name="problem" id="problem" rows="5" placeholder="Enter problem" class="form-control"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discussion" class=" form-control-label">Discussion</label>
+                            <textarea v-model="discussion" name="discussion" id="discussion" rows="5" placeholder="Enter discussion" class="form-control"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="conclusion" class=" form-control-label">Conclusion</label>
+                            <textarea v-model="conclusion" name="conclusion" id="conclusion" rows="5" placeholder="Enter conclusion" class="form-control"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment" class=" form-control-label">Comment</label>
+                            <textarea v-model="comment" name="comment" id="comment" rows="5" placeholder="Enter commen" class="form-control"></textarea>
                         </div>
 
                     </div>
                 </div>
+                <br>
 
-                <div class="form-group">
-                    <label for="objective" class=" form-control-label">Others</label>
-                    <textarea v-model="objective" name="objective" id="objective" rows="5" placeholder="Enter objective" class="form-control"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="conclusion" class=" form-control-label">Summary</label>
-                    <textarea v-model="conclusion" name="conclusion" id="conclusion" rows="5" placeholder="Enter conclusion" class="form-control"></textarea>
-                </div>
-
-
-                <!--div class="card-title">
+                <div class="card-title">
                     <h5 class="title-2">Meeting Participant</h5>
                 </div>
                 <hr>
@@ -127,6 +151,9 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="" class=" form-control-label">&nbsp;</label><br>
+                        <!--button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fa fa-plus"></i> Add
+                        </button> &nbsp;-->
                         <button type="submit" class="btn btn-primary btn-sm">
                             <i class="fa fa-list"></i> View List
                         </button>
@@ -154,10 +181,10 @@
                             </tr>
                         </tbody>
                     </table>
-                </div-->
+                </div>
 
 
-                <!--div class="card-title">
+                <div class="card-title">
                     <h5 class="title-2">Meeting Actions</h5>
                 </div>
                 <hr>
@@ -216,7 +243,7 @@
                         <div class="au-task js-list-load au-task--border">
 
                             <div class="au-task__title">
-                                
+                                <!--p>Tasks for John Doe</p-->
                                 <p>Meeting Dialog</p>
                             </div>
 
@@ -281,11 +308,11 @@
 
                             </div>
       
-                            <div class="au-task__footer">
+                            <!--div class="au-task__footer">
                                 <button class="au-btn au-btn-load js-load-btn">load more</button>
-                            </div>
+                            </div-->
                         </div>
-                    </div-->
+                    </div>
 
 
                 <!--/form--->

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import MeetingForm from '../../components/Meeting/Form.vue'
+import MeetingForm from '../../components/Meeting/DiscussionLogs.vue'
 export default {
     name: "FormMeeting",
     components: {
