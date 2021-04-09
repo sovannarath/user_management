@@ -1,292 +1,289 @@
 <template>
-<div class="row">
-    <div class="col offset-md-1 col-md-10">
-    <div class="card">
-        <div class="card-header">
-            <strong>Meeting Report</strong>
-            <button type="submit" class="btn btn-primary btn-sm pull-right">
-                <i class="fa fa-dot-circle-o"></i> Submit
-            </button>
-        </div>
-        <div class="card-body card-block">
-            <div class="row">
-                <div class="col col-md-6">
+    <div class="row">
+        <div class="col col-md-6">
 
-                    <div class="form-group">
-                        <label for="topic" class=" form-control-label">Task Name</label>
-                        <input type="topic" id="topic" v-model="topic" name="topic" placeholder="Enter meeting topic" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="date" class=" form-control-label">Start Date</label>
-                        <input type="date" id="date" v-model="date" name="date" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="next_topic" class=" form-control-label">Completed Percentage</label>
-                        <input type="text" id="next_topic" v-model="next_topic" name="next_topic" placeholder="" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="participant" class=" form-control-label">PIC</label>
-                        <input v-on:keyup="retrieveParticipant()" type="text" id="searchParticipant" v-model="searchParticipant" name="searchParticipant" placeholder="Search PIC" class="form-control">
-                        <select name="participant_ids" v-model="participant_ids" id="participant_ids" multiple="" class="form-control">
-                            <option v-for="tmpDisplayParticipant in tmpDisplayParticipants" v-bind:key="tmpDisplayParticipant.id" v-bind:value="tmpDisplayParticipant.id">{{tmpDisplayParticipant.name}}</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="objective" class=" form-control-label">Description</label>
-                        <textarea v-model="objective" name="objective" id="objective" rows="10" placeholder="Enter objective" class="form-control"></textarea>
-                    </div>
-
-                </div>
-                <div class="col col-md-6">
-
-                    <div class="form-group">
-                        <label for="project_id" class=" form-control-label">Project</label>
-                        <select v-model="project_id" name="project_id" id="project_id" class="form-control">
-                            <option disabled selected >-- Please select project --</option>
-                            <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">{{project.name}}</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="date" class=" form-control-label">End Date</label>
-                        <input type="date" id="date" v-model="date" name="date" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="meeting_type_id" class=" form-control-label">Task Status</label>
-                        <select name="meeting_type_id" v-model="meeting_type_id" id="meeting_type_id" class="form-control">
-                            <option disabled selected value="0">Please select status</option>
-                            <option>Finished</option>
-                            <option>On Hold</option>
-                            <option>Next Schedule</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="participant" class=" form-control-label">Department</label>
-                        <input v-on:keyup="retrieveParticipant()" type="text" id="searchParticipant" v-model="searchParticipant" name="searchParticipant" placeholder="Search Department" class="form-control">
-                        <select name="participant_ids" v-model="participant_ids" id="participant_ids" multiple="" class="form-control">
-                            <option v-for="tmpDisplayParticipant in tmpDisplayParticipants" v-bind:key="tmpDisplayParticipant.id" v-bind:value="tmpDisplayParticipant.id">{{tmpDisplayParticipant.name}}</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="objective" class=" form-control-label">Comment</label>
-                        <textarea v-model="objective" name="objective" id="objective" rows="10" placeholder="Enter Comment" class="form-control"></textarea>
-                    </div>
-
-                </div>
+            <div class="form-group">
+                <label for="task_name" class=" form-control-label">Task Name</label>
+                <input type="text" id="task_name" v-model="task_name" name="task_name" placeholder="Enter task name" class="form-control">
             </div>
+
+            <div class="form-group">
+                <label for="start_date" class=" form-control-label">Start Date</label>
+                <input type="text" id="start_date" v-model="start_date" name="start_date" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="completed_percentage" class=" form-control-label">Completed Percentage</label>
+                <input type="text" id="completed_percentage" v-model="completed_percentage" name="completed_percentage" placeholder="" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="pic" class=" form-control-label">Project Implement Committee</label>
+                <input v-on:keyup="retrievePIC()" type="text" id="pic" v-model="searchPIC" name="pic" placeholder="Search PIC" class="form-control">
+                <select name="pic_id" v-model="pic_id" id="pic_id" multiple="" class="form-control">
+                    <option v-for="pic in pics" v-bind:key="pic.id" v-bind:value="pic.id">{{pic.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class=" form-control-label">Description</label>
+                <textarea v-model="description" name="description" id="description" rows="10" placeholder="Enter description" class="form-control"></textarea>
+            </div>
+
+        </div>
+        <div class="col col-md-6">
+
+            <div class="form-group">
+                <label for="project_id" class=" form-control-label">Project</label>
+                <select v-model="project_id" name="project_id" id="project_id" class="form-control">
+                    <option disabled selected >-- Please select project --</option>
+                    <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">{{project.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="end_date" class=" form-control-label">End Date</label>
+                <input type="end_date" id="end_date" v-model="end_date" name="end_date" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="task_status" class=" form-control-label">Task Status</label>
+                <select name="task_status" v-model="task_status" id="task_status" class="form-control">
+                    <option disabled selected value="0">Please select status</option>
+                    <option>Finished</option>
+                    <option>On Hold</option>
+                    <option>Next Schedule</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="department" class=" form-control-label">Department</label>
+                <input v-on:keyup="retrieveDepartment()" type="text" id="department" v-model="searchDepartment" name="department" placeholder="Search Department" class="form-control">
+                <select name="department" v-model="department_id" id="department" multiple="" class="form-control">
+                    <option v-for="department in departments" v-bind:key="department.id" v-bind:value="department.id">{{department.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="comment" class=" form-control-label">Comment</label>
+                <textarea v-model="comment" name="comment" id="comment" rows="10" placeholder="Enter comment" class="form-control"></textarea>
+            </div>
+
         </div>
     </div>
+    <div class="row">
+        <div class="col col-lg-12">
+            <button class="btn btn-sm btn-primary pull-right">Save</button>
+        </div>
     </div>
-</div>
-
 </template>
-
-<style scoped>
-
-.dialog-container{
-    background-color:grey;
-    padding: 25px;
-}
-
-.participant-dialog{
-    background-color: white;
-    padding: 20px;
-    margin:5px;
-}
-
-.participant-dialog-name{
-    font-weight: bold;
-}
-
-.participant-dialog-action {
-    font-size: 12px;
-}
-
-.question-item {
-    border-left: solid 5px red;
-}
-
-.answer-item {
-    border-left: solid 5px blue;
-}
-
-.comment-item {
-    border-left: solid 5px green;
-}
-
-</style>
 
 <script>
 
-import UserAPI from '../../services/UserService'
-import ProjectAPI from '../../services/ProjectService'
-import MeetingTypeAPI from '../../services/MeetingTypeService'
-import MeetingActionAPI from '../../services/MeetingActionService'
-import MeetingActionTypeAPI from '../../services/MeetingActionTypeService'
-
-export default {
-    name: 'ProjectTaskForm',
-    components: {
+    export default {
+        name: 'ProjectTaskForm',
+        components: {
         
-    },
-    data () {
-        return {
-            id                      : null,
-            topic                   : null,
-            meeting_type_id         : null,
-            project_id              : null,
-            issue_number            : null,
-            location                : null,
-            date                    : null,
-            start_time              : null,
-            end_time                : null,
-            status                  : null,
-            next_date               : null,
-            next_topic              : null,
-            next_comment            : null,
-            objective               : null,
-            problem                 : null,
-            discussion              : null,
-            conclusion              : null,
-            comment                 : null,
-            action_id               : null,
-            description             : null,
-            related_action_id       : null,
-            meetingTypes            : [],
-            meetingActions          : [],
-            projects                : [],
-            participants            : [],
-            searchParticipant       : null, 
-            displayParticipants     : [],
-            tmpDisplayParticipants  : [],
-            participant_ids         : [],
-            speakers                : null,
-            tmpSpeakers              : [],
-            searchSpeaker           : null,
-            actionTypes             : [],
-            relatedActions          : null,
-        }
-    },
-    methods: {
-        saveMeeting() {
-            var data                        = {};
-            data['name']                    = this.topic;
-            data['project_id']              = this.project_id;
-            data['meeting_type']            = {"id": this.meeting_type_id};
-            data['issue_number']            = this.issue_number;
-            data['date']                    = this.date;
-            data['start_time']              = this.start_time;
-            data['end_time']                = this.end_time;
-            data['location']                = this.location;
-            data['objective']               = this.objective;
-            data['problem']                 = this.problem;
-            data['disscussion']             = this.disccussion;
-            data['conclusion']              = this.conclusion;
-            data['comment']                 = this.comment;
-            data['status']                  = this.status;
-            data['next_schedule']           = this.next_date;
-            data['next_schedule_topic']     = this.next_schedule_topic;
-            data['next_schedule_comment']   = this.next_schedule_comment;
-            console.log(data);
         },
-        retrieveParticipant(){
-            if(this.searchParticipant != ''){
-                var data = {};
-                data['search'] = this.searchParticipant;
-                UserAPI.search(data)
-                .then(response => {
-                    this.tmpDisplayParticipants = response;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            }
-            else{
-                this.tmpDisplayParticipants = [];
+        data () {
+            return {
+                projects                : [],
+                departments             : [],
+                pics                    : [],
+                task_name               : '',
+                start_date              : '',
+                completed_percentage    : '',
+                searchPIC               : '',
+                description             : '',
+                end_date                : '',
+                task_status             : '',
+                department_id           : '',
+                searchDepartment        : '',
+                userData                : [
+                    {
+                        'id': 1,
+                        'name' : 'Thorn Sovannarath',
+                        'occupy' : 'Developer',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 2,
+                        'name' : 'Duy Panharith',
+                        'occupy' : 'Director',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 3,
+                        'name' : 'Kim Chong',
+                        'occupy' : 'Manager',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 4,
+                        'name' : 'Heng Sophat',
+                        'occupy' : 'Coordinator',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 5,
+                        'name': 'Heng Siyouer',
+                        'occupy' : 'Admin',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 6,
+                        'name' : 'Huy Lyly',
+                        'occupy' : 'Secreterist',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 7,
+                        'name' : 'Ly Chenglim',
+                        'occupy' : 'Secreterist',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 8,
+                        'name' : 'Say Sopheak',
+                        'occupy' : 'Secreterist',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 9,
+                        'name': 'Morn Sopheaktra',
+                        'occupy' : 'Secreterist',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id' : 10,
+                        'name' : 'Top Sophea',
+                        'occupy' : 'Secreterist',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    },
+                    {
+                        'id': 11,
+                        'name': 'Meng Sokeang',
+                        'occupy' : 'Secreterist',
+                        'organization': 'Secretary',
+                        'email': 'blabla@email.com',
+                        'phone' : '+855'
+                    }
+                ],
+                departmentData: [
+                    {
+                        'id': 1,
+                        'name': 'IT Department'
+                    },
+                    {
+                        'id': 2,
+                        'name': 'HR Department'
+                    },
+                    {
+                        'id': 3,
+                        'name': 'Bussiness Department'
+                    },
+                    {
+                        'id': 4,
+                        'name': 'Marketing Department'
+                    },
+                    {
+                        'id': 5,
+                        'name': 'Consultant Department'
+                    },
+                    {
+                        'id': 6,
+                        'name': 'Relation Department'
+                    }
+                ]
             }
         },
-        retrieveSpeaker(){
-             if(this.searchSpeaker != ''){
-                var data = {};
-                data['search'] = this.searchSpeaker;
-                UserAPI.search(data)
-                .then(response => {
-                    this.tmpSpeakers = response;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            }
-            else{
-                this.searchSpeaker = [];
-            }
-        },
-        retrieveUser(str, tag){
-            console.log(str);
-            var data = {};
-            data['search'] = str;
-            UserAPI.search(data)
-            .then(response => {
-                if(tag == 'participant') {
-                    this.tmpDisplayParticipants = response;
+        methods: {
+            initProjects() {
+                this.projects = [
+                    {
+                        'id'    : 1,
+                        'name'  : 'Z1 Data'
+                    },
+                    {
+                        'id'    : 2,
+                        'name'  : 'Z1 App'
+                    },
+                    {
+                        'id'    : 3,
+                        'name'  : 'Big Data'
+                    },
+                    {
+                        'id'    : 4,
+                        'name'  : 'V-Trust Apraisal'
+                    },
+                    {
+                        'id'    : 5,
+                        'name'  : 'Trading'
+                    }
+                ];
+            },
+            retrievePIC() {
+                if(this.searchPIC != ''){
+                    let scope = this;
+                    scope.pics = [];
+                    var str = scope.searchPIC;
+                    this.userData.forEach(function(value, key){
+                        var name = value.name.toLowerCase()
+                        if(name.includes(str)){
+                            scope.pics.push(value)
+                        }
+
+                        if(key){
+                            console.log('')
+                        }
+                    })
                 }
-                else if(tag == 'speaker'){
-                    this.tmpSpeakers = response;
+                else {
+                    this.pics = [];
                 }
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            },
+            retrieveDepartment() {
+                if(this.searchDepartment != ''){
+                    let scope = this;
+                    scope.departments = [];
+                    var str = scope.searchDepartment.toLowerCase();
+                    this.departmentData.forEach(function(value, key){
+                        var name = value.name.toLowerCase();
+                        if(name.includes(str)){
+                            scope.departments.push(value);
+                        }
+                        if(key){
+                            console.log('');
+                        }
+                    })
+                }
+                else {
+                    this.departments = [];
+                }
+            }
         },
-        retrieveProject(){
-            ProjectAPI.allProjects()
-            .then(response => {
-                this.projects = response
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        },
-        retrieveMettingType(){
-            MeetingTypeAPI.allMeetingTypes()
-            .then(response => {
-                this.meetingTypes = response
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        },
-        retrieveActionType(){
-            MeetingActionTypeAPI.allMeetingActionTypes()
-            .then(response => {
-                this.actionTypes = response
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        },
-        relatedAction(){
-            MeetingActionAPI.allMeetingActions(1)
-            .then(response => {
-                this.meetingActions = response
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        mounted() {
+            this.initProjects();
         }
-    },
-    mounted() {
-        this.retrieveProject();
-        this.retrieveMettingType();
-        this.retrieveActionType();
-        this.relatedAction();
     }
-}
 </script>
