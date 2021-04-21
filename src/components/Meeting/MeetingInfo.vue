@@ -42,14 +42,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="objective" class=" form-control-label">Objective</label>
-                            <textarea v-model="objective" name="objective" id="objective" rows="10" placeholder="Enter objective" class="form-control"></textarea>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="other" class=" form-control-label">Others</label>
-                            <textarea v-model="other" name="other" id="other" rows="10" placeholder="Enter Others" class="form-control"></textarea>
+                            <label for="comment" class=" form-control-label">Comment</label>
+                            <textarea v-model="comment" name="comment" id="comment" rows="10" placeholder="Enter comment" class="form-control"></textarea>
                         </div>
 
                     </div>
@@ -86,11 +80,6 @@
                         <div class="form-group">
                             <label for="next_topic" class=" form-control-label">Next Topic</label>
                             <input type="text" id="next_topic" v-model="next_topic" name="next_topic" placeholder="Enter next topic" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="comment" class=" form-control-label">Comment</label>
-                            <textarea v-model="comment" name="comment" id="comment" rows="10" placeholder="Enter comment" class="form-control"></textarea>
                         </div>
 
                         <div class="form-group">

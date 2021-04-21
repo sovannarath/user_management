@@ -7,14 +7,16 @@
 
 		<div class="card-body">
 
+            
+
 			<div class="default-tab">
 
 				<nav>
 					<div class="nav nav-tabs" id="nav-tab" role="tablist">
-						<a class="nav-item nav-link active" id="nav-meeting-info-tab" data-toggle="tab" href="#nav-meeting-info" role="tab" aria-controls="nav-meeting-info" aria-selected="true">Meeting Information</a>
+						<a class="nav-item nav-link active" id="nav-meeting-info-tab" data-toggle="tab" href="#nav-meeting-info" role="tab" aria-controls="nav-meeting-info" aria-selected="true">General Information</a>
 						<a class="nav-item nav-link" id="nav-participant-tab" data-toggle="tab" href="#nav-participant" role="tab" aria-controls="nav-participant" aria-selected="false">Participant</a>
-						<a class="nav-item nav-link" id="nav-task-log-tab" data-toggle="tab" href="#nav-task-log" role="tab" aria-controls="nav-task-log" aria-selected="false">Task Log</a>
-                        <a class="nav-item nav-link" id="nav-discussion-log-tab" data-toggle="tab" href="#nav-discussion-log" role="tab" aria-controls="nav-discussion-log" aria-selected="false">Discussion Log</a>
+                        <a class="nav-item nav-link" id="nav-detail-tab" data-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-detail" aria-selected="false">Detail</a>
+                        <!--a class="nav-item nav-link" id="nav-discussion-log-tab" data-toggle="tab" href="#nav-discussion-log" role="tab" aria-controls="nav-discussion-log" aria-selected="false">Discussion Log</a-->
                     </div>
 				</nav>
 
@@ -25,12 +27,12 @@
                     <div class="tab-pane fade" id="nav-participant" role="tabpanel" aria-labelledby="nav-participant-tab">
                         <Participant></Participant>
                     </div>
-					<div class="tab-pane fade" id="nav-task-log" role="tabpanel" aria-labelledby="nav-task-log-tab">
+                    <div class="tab-pane fade" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
                         <ProjectTask></ProjectTask>
                     </div>
-                    <div class="tab-pane fade" id="nav-discussion-log" role="tabpanel" aria-labelledby="nav-discussion-tab">
+                    <!--div class="tab-pane fade" id="nav-discussion-log" role="tabpanel" aria-labelledby="nav-discussion-tab">
                        <DiscussionLog/>
-                    </div>
+                    </div-->
                 </div>
 
 			</div>
@@ -44,7 +46,7 @@
 import MeetingInfo from '../../components/Meeting/MeetingInfo'
 import Participant from '../../components/Meeting/Participant'
 import ProjectTask from '../../components/Meeting/ProjectTask'
-import DiscussionLog from '../../components/Meeting/DiscussionLogs'
+//import DiscussionLog from '../../components/Meeting/DiscussionLogs'
 
 export default {
     name: 'Form',
@@ -52,7 +54,7 @@ export default {
         MeetingInfo,
         Participant,
         ProjectTask,
-        DiscussionLog
+        //DiscussionLog
     },
     data () {
      

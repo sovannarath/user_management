@@ -25,6 +25,7 @@
                                 <th>Organization</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,6 +35,16 @@
                                 <td>{{participant.organization}}</td>
                                 <td>{{participant.email}}</td>
                                 <td>{{participant.phone}}</td>
+                                <td>
+                                    <div class="table-data-feature">
+                                        <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <i class="zmdi zmdi-edit"></i>
+                                        </button>
+                                        <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <i class="zmdi zmdi-delete"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -41,6 +52,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'Participant',
     components: {
