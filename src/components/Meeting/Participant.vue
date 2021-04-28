@@ -3,10 +3,11 @@
             <div class="row form-group">
                     <div class="col col-md-6">
                         <label for="participant" class=" form-control-label">Search</label>
-                        <input v-on:keyup="searchParticipants()" type="text" id="searchParticipant" v-model="searchParticipant" name="searchParticipant" placeholder="Search participant" class="form-control">
+                        <!--input v-on:keyup="searchParticipants()" type="text" id="searchParticipant" v-model="searchParticipant" name="searchParticipant" placeholder="Search participant" class="form-control">
                         <select v-on:change="selectParticipant()" name="participant_ids" v-model="participant_ids" id="participant_ids" multiple="" class="form-control">
                             <option v-for="tmpDisplayParticipant in tmpDisplayParticipants" v-bind:key="tmpDisplayParticipant.id" v-bind:value="tmpDisplayParticipant.id">{{tmpDisplayParticipant.name}}</option>
-                        </select>
+                        </select-->
+                        <Select2 v-model="participantId" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
                     </div>
                     <div class="col-12 col-md-6">
                         <!--label for="" class=" form-control-label">&nbsp;</label><br>
@@ -52,18 +53,19 @@
 </template>
 
 <script>
-
+import Select2 from 'vue3-select2-component';
 export default {
     name: 'Participant',
     components: {
-        
+        Select2,
     },
     data () {
         return {
             searchParticipant       : '',
             tmpDisplayParticipants  : [],
             participants            : [],
-            participant_ids         : '',
+            participantId         : '',
+            userDataForSelect: [],
             userData                : [
                 {
                     'id': 1,
@@ -157,6 +159,21 @@ export default {
         }
     },
     methods: {
+        myChangeEvent(val){
+            console.log(val)
+            console.log("Changed!");
+        },
+        mySelectEvent({id, text}){
+            var user = {};
+            this.userData.forEach(function(value){
+                if(value.id == id){
+                    user = value
+                }
+            });
+            console.log(user);
+            this.participants.push(user);
+            console.log({id, text});
+        },
         searchParticipants() {
             if(this.searchParticipant != ""){
                 let scope = this;
@@ -187,7 +204,10 @@ export default {
         }
     },
     mounted() {
- 
+        var self = this;
+        this.userData.forEach(function(value){
+            self.userDataForSelect.push({'id':value.id, 'text': value.name});
+        });
     }
 }
 </script>

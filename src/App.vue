@@ -19,17 +19,17 @@
               <a href="#user_menu" data-toggle="collapse" aria-expanded="false"><i class="fas fa-user"></i>Users</a>
                 <ul class="collapse list-unstyled" id="user_menu">
                   <li class="main_menu">
-                    <router-link to="/users">User</router-link>
+                    <router-link to="/users">User Information</router-link>
                   </li>
-                  <li class="main_menu">
+                  <!--li class="main_menu">
                     <router-link to="/roles">Role</router-link>
                   </li>
                   <li class="main_menu">
                     <router-link to="/organizations">Organization</router-link>
-                  </li>
+                  </li-->
                 </ul>
             </li>
-            <li>
+            <!--li>
               <a href="#user_contact_menu" data-toggle="collapse" aria-expanded="false"><i class="fas fa-book"></i>User Contacts</a>
                 <ul class="collapse list-unstyled" id="user_contact_menu">
                   <li class="main_menu">
@@ -42,24 +42,29 @@
                     <router-link to="/contact-providers">Contact Provider</router-link>
                   </li>
                 </ul>
-            </li>
+            </li-->
             <li>
               <a href="#project_menu" data-toggle="collapse" aria-expanded="false"><i class="fas fa-suitcase"></i>Manage Projects</a>
                 <ul class="collapse list-unstyled" id="project_menu">
                     <li class="main_menu">
-                      <router-link to="/projects">Project</router-link>
+                      <router-link to="/projects">Project Information</router-link>
                     </li>
-                    <li class="main_menu">
+                    <!--li class="main_menu">
                       <router-link to="/project-types">Project Type</router-link>
-                    </li>
+                    </li-->
                 </ul>
             </li>
             <li>
               <router-link to="/meetings"><i class="fas fa-group"></i>Meetings</router-link>
             </li>
-            <!--li>
-              <router-link to="/settings"><i class="fas fa-cog"></i>Settings</router-link>
-            </li-->
+            <li>
+              <a href="#setting_menu" data-toggle="collapse" aria-expanded="false"><i class="fas fa-cogs"></i>System Settngs</a>
+                <ul class="collapse list-unstyled" id="setting_menu">
+                    <li class="main_menu">
+                      <router-link to="/settings">General Settings</router-link>
+                    </li>
+                </ul>
+            </li>
           </ul>
         </nav>
       </div>

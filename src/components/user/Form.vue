@@ -29,7 +29,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="offset-sm-2 col-sm-8">
+    <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
                 <strong>User Form</strong>
@@ -125,7 +125,7 @@
 </div>
 
 <div class="row">
-    <div class="offset-sm-2 col-sm-8">
+    <div class="col-sm-12">
         <!-- USER DATA-->
         <div class="user-data m-b-30">
             <div class="row">
@@ -321,7 +321,61 @@ export default {
             contact_type_id : '',
             provider_id     : '',
             contact_id       : '',
-            let_delete      : false
+            let_delete      : false,
+            userData : [
+                {
+                    'id': 1,
+                    'name' : 'Thorn Sovannarath',
+                    'role' : {
+                        'id' : 1,
+                        'name' : 'Developer',
+                    },
+                    'organization': {
+                        'id' : 1,
+                        'name' : 'Secretary',
+                    },
+                    'email': 'blabla@email.com',
+                    'phone' : '+855',
+                    'contacts' : [
+                        {
+                            'id' : 1,
+                            'contact' : '+85569929695',
+                            'type' : {
+                                'id' : 1,
+                                'name' : 'PHONE'
+                            },
+                            'provider' : {
+                                'id' : 1,
+                                'name' : 'SMART'
+                            }
+                        },
+                        {
+                            'id' : 2,
+                            'contact' : '+85595254842',
+                            'type' : {
+                                'id': 1,
+                                'name' : 'PHONE'
+                            },
+                            'provider' : {
+                                'id' : 2,
+                                'name' : 'CELLCARD'
+                            }
+                        },
+                        {
+                            'id' : 3,
+                            'contact' : 'thornsovannarath@gmail.com',
+                            'type' : {
+                                'id' : 2,
+                                'name' : 'EMAIL'
+                            },
+                            'provider' : {
+                                'id' : 3,
+                                'name' : 'GOOGLE'
+                            }
+                        },
+                    ]
+                }
+            ]
         }
     },
     methods: {
@@ -388,7 +442,15 @@ export default {
             } 
         },
         getUserInformation(id) {
-            UserAPI.get_user(id)
+                this.contacts = this.userData[0].contacts;
+                this.id                 = this.userData[0].id
+                this.full_name          = this.userData[0].name
+                this.gender             = this.userData[0].gender
+                this.email              = this.userData[0].email
+                this.organization_id    = this.userData[0].organization.id
+                this.role_id            = this.userData[0].role.id
+                console.log(id);
+            /*UserAPI.get_user(id)
             .then(response => {
                 this.contacts = response.contacts
                 console.log(response.contacts)
@@ -404,7 +466,7 @@ export default {
             .catch(err => {
                 console.log(err)
             })
-            .finally(() => {})
+            .finally(() => {})*/
         },
         clearAllInput() {
             this.id                 = ''
