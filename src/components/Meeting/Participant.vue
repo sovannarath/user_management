@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="table-responsive table--no-card m-b-40">
-                    <table class="table table-borderless table-striped table-earning">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Full Name</th>

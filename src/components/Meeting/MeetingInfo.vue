@@ -42,8 +42,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="comment" class=" form-control-label">Comment</label>
-                            <textarea v-model="comment" name="comment" id="comment" rows="10" placeholder="Enter comment" class="form-control"></textarea>
+                            <label for="comment" class=" form-control-label">Suggestion</label>
+                            <textarea v-model="comment" name="comment" id="comment" rows="10" placeholder="Enter suggestion" class="form-control"></textarea>
                         </div>
 
                     </div>

@@ -40,7 +40,45 @@
                 <textarea readonly id="summary" v-model="summary['summary-'+projectTask.id]" placeholder="Enter agenda summary" rows="3" class="form-control"></textarea>
             </div>
 
-            <h4>Discussion Dialog</h4>
+            <br>
+            <h5>Attachment</h5>
+            <hr>
+             <div class="form-group">
+                <label for="file-multiple-input" class=" form-control-label">Upload</label>
+                <input type="file" id="file-multiple-input" name="file-multiple-input" multiple="" class="form-control-file">
+            </div>
+
+            <div class="table-responsive table--no-card m-b-40">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Type</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="attachment in attachments" v-bind:key="attachment.id">
+                            <td>
+                                <a href="#">{{attachment.name}}</a>
+                            </td>
+                            <td>{{attachment.type.name}}</td>
+                            <td>
+                                <div class="table-data-feature">
+                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <i class="zmdi zmdi-edit"></i>
+                                    </button>
+                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <i class="zmdi zmdi-delete"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h5>Discussion Dialog</h5>
             <hr>
             
             <div class="row" style="margin-bottom:10px;">
@@ -71,7 +109,7 @@
             </div>
 
             <div class="table-responsive table--no-card m-b-40">
-                <table class="table table-borderless table-striped table-earning">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Speaker</th>
@@ -129,16 +167,6 @@
                         <div class="form-group">
                             <label for="frm_summary" class=" form-control-label">Agenda Summary</label>
                             <textarea id="frm_summary" v-model="frm_summary" placeholder="Enter agenda summary" rows="3" class="form-control"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="file-input" class=" form-control-label">File input</label>                            
-                            <input type="file" id="file-input" name="file-input" class="form-control-file">                           
-                        </div>
-
-                        <div class="form-group">
-                            <label for="file-multiple-input" class=" form-control-label">Multiple File input</label>
-                            <input type="file" id="file-multiple-input" name="file-multiple-input" multiple="" class="form-control-file">
                         </div>
 
                         <input type="hidden" v-model="project_id">
@@ -282,6 +310,24 @@ export default {
                     'id' : 1,
                     'name' : 'Update App Z1',
                     'description': 'This content of updating information of Z1 app!'
+                }
+            ],
+            attachments : [
+                {
+                    'id': 1,
+                    'name' : 'file_1.pptx',
+                    'type' : {
+                        'id': 1,
+                        'name' : 'Power Point'
+                    },
+                },
+                {
+                    'id' : 2,
+                    'name' : 'file_2.pdf',
+                    'type' : {
+                        'id' : 2,
+                        'name' : 'PDF'
+                    }
                 }
             ],
             task_name : "",
