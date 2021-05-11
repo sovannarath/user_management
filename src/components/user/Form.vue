@@ -442,14 +442,14 @@ export default {
             } 
         },
         getUserInformation(id) {
-                this.contacts = this.userData[0].contacts;
-                this.id                 = this.userData[0].id
-                this.full_name          = this.userData[0].name
-                this.gender             = this.userData[0].gender
-                this.email              = this.userData[0].email
-                this.organization_id    = this.userData[0].organization.id
-                this.role_id            = this.userData[0].role.id
-                console.log(id);
+            this.contacts = this.userData[0].contacts;
+            this.id                 = this.userData[0].id
+            this.full_name          = this.userData[0].name
+            this.gender             = this.userData[0].gender
+            this.email              = this.userData[0].email
+            this.organization_id    = this.userData[0].organization.id
+            this.role_id            = this.userData[0].role.id
+            console.log(id);
             /*UserAPI.get_user(id)
             .then(response => {
                 this.contacts = response.contacts

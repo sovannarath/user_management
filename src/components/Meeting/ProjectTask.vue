@@ -85,7 +85,7 @@
                 <div class="col col-sm-6">
                     <div class="form-group">
                         <label for="description" class=" form-control-label">Description</label>
-                        <textarea id="description" v-model="description['descript-'+projectTask.id]" name="description" placeholder="Enter description" rows="7" class="form-control"></textarea>
+                        <textarea id="description" v-model="description['descript-'+projectTask.id]" name="description" placeholder="Enter description" rows="8" class="form-control"></textarea>
                     </div>
                     
                 </div>
@@ -95,9 +95,15 @@
                         <Select2 v-model="speakerId['speaker-'+projectTask.id]" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
                     </div>
                     <div class="form-group" style="margin-bottom:20px;">
-                        <label for="action_type" class=" form-control-label">Action Type</label>
+                        <label for="action_type" class=" form-control-label">Type</label>
                         <select v-model="action_type_id['action-'+projectTask.id]" id="action_type" class="form-control">
                             <option v-for="meetingAction in meetingActionTypes" v-bind:key="meetingAction.id" v-bind:value="meetingAction.id">{{meetingAction.name}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:20px;">
+                        <label for="related_speech" class=" form-control-label">Related Speech</label>
+                        <select v-model="relatedId['related-'+projectTask.id]" id="related_speech" class="form-control">
+                            <option v-for="agenda in agendaDialog['agenda-'+projectTask.id]" v-bind:key="agenda.id" v-bind:value="agenda.id">{{agenda.description}}</option>
                         </select>
                     </div>
                     <input type="hidden" v-model="dialogId['dialogId-'+projectTask.id]">
@@ -115,6 +121,7 @@
                             <th>Speaker</th>
                             <th>Action Type</th>
                             <th>Description</th>
+                            <th>Related</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -123,6 +130,7 @@
                             <td>{{dialog.speaker['name']}}</td>
                             <td>{{dialog.action['name']}}</td>
                             <td>{{dialog.description}}</td>
+                            <td>{{dialog.related == null? '' : dialog.related.description}}</td>
                             <td>
                                 <div class="table-data-feature">
                                     <button v-on:click="editAction(dialog.id, projectTask.id)" class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
@@ -350,7 +358,8 @@ export default {
                             'id' : 1,
                             'name' : 'ASK QUESTION',
                         },
-                        'description' : 'What does the POI mean?'
+                        'description' : 'What does the POI mean?',
+                        'related' : null
                     }
                 ]
             },
@@ -358,6 +367,7 @@ export default {
             frm_summary : "",
             speakerId: {},
             dialogId: {},
+            relatedId: {}
         }
     },
     methods: {
@@ -407,36 +417,29 @@ export default {
        },
        addDialog(project_id) {
             var self = this;
-            var speakerName = "";
-            var actionTypeName = "";
+            var data = {
+                'id' : this.agendaDialog['agenda-'+project_id].length+1,
+                'description' : this.description['descript-'+project_id]
+            };
+
             this.userData.forEach(function(value){
                 if (value.id == self.speakerId['speaker-'+project_id]){
-                    speakerName = value.name;
+                    data['speaker'] = value;
                 }
             });
 
             this.meetingActionTypes.forEach(function(value){
                 if (value.id == self.action_type_id['action-'+project_id]) {
-                   actionTypeName = value.name;
+                   data['action'] = value;
                 }
             });
 
-            var data = {
-               'id' : this.agendaDialog['agenda-'+project_id].length+1,
-                'speaker' : {
-                    'id' : self.speakerId['speaker-'+project_id],
-                    'name' : speakerName
-                },
-                'action' : {
-                    'id' : self.action_type_id['action-'+project_id],
-                    'name' : actionTypeName
-                },
-                'description' : this.description['descript-'+project_id]
-            };
+            this.agendaDialog['agenda-'+project_id].forEach(function(value){
+                if(value.id == self.relatedId['related-'+project_id]){
+                    data['related'] = value;
+                 }
+            });
 
-            console.log("It's work!");
-            console.log(this.dialogId['dialogId-'+project_id]);
-            console.log(this.dialogId);
             if ( (this.dialogId['dialogId-' + project_id] == undefined | this.dialogId['dialogId-' + project_id] == "") &&
                 (self.speakerId['speaker-'+project_id] != "" | self.action_type_id['action-'+project_id] != "" | this.description['descript-'+project_id] != "") ) {
 
@@ -456,10 +459,9 @@ export default {
            var self = this;
            this.projectTasks.forEach(function(value){
                if(project_id == value.id){
-                   console.log(value.description);
-                   self.project_id = value.id;
-                   self.task_name = value.name;
-                   self.frm_summary = value.description;
+                   self.project_id      = value.id;
+                   self.task_name       = value.name;
+                   self.frm_summary     = value.description;
                }
            });
        },
@@ -476,22 +478,23 @@ export default {
                    actionRecord = value;
                }
            });
-           console.log(actionRecord);
-           this.description['descript-'+project_id] = actionRecord.description;
-           this.action_type_id['action-'+project_id] = actionRecord.action['id'];
-           this.speakerId['speaker-'+project_id] = actionRecord.speaker['id'];
+           this.description['descript-'+project_id]     = actionRecord.description;
+           this.action_type_id['action-'+project_id]    = actionRecord.action['id'];
+           this.speakerId['speaker-'+project_id]        = actionRecord.speaker['id'];
+           this.relatedId['related-'+project_id]        = (actionRecord.related == null ? '' : actionRecord.related.id); 
        },
        clearDialog(project_id) {
-           this.description['descript-'+project_id] = "";
-           this.speakerId['speaker-'+project_id] = "";
-           this.action_type_id['action-'+project_id] = "";
-           this.dialogId['dialogId-' + project_id] = "";
+           this.description['descript-' + project_id]   = "";
+           this.speakerId['speaker-' + project_id]      = "";
+           this.action_type_id['action-' + project_id]  = "";
+           this.dialogId['dialogId-' + project_id]      = "";
+           this.relatedId['related-' + project_id]      = "";
        }
     },
     mounted() {
         var self = this;
         this.userData.forEach(function(value){
-            self.userDataForSelect.push({'id':value.id, 'text': value.name});
+            self.userDataForSelect.push({'id' : value.id, 'text' : value.name});
         });
         this.updateSummary();
     }
