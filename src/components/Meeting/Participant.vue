@@ -3,17 +3,13 @@
             <div class="row form-group">
                     <div class="col col-md-6">
                         <label for="participant" class=" form-control-label">Search</label>
-                        <!--input v-on:keyup="searchParticipants()" type="text" id="searchParticipant" v-model="searchParticipant" name="searchParticipant" placeholder="Search participant" class="form-control">
-                        <select v-on:change="selectParticipant()" name="participant_ids" v-model="participant_ids" id="participant_ids" multiple="" class="form-control">
-                            <option v-for="tmpDisplayParticipant in tmpDisplayParticipants" v-bind:key="tmpDisplayParticipant.id" v-bind:value="tmpDisplayParticipant.id">{{tmpDisplayParticipant.name}}</option>
-                        </select-->
                         <Select2 v-model="participantId" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
                     </div>
                     <div class="col-12 col-md-6">
-                        <!--label for="" class=" form-control-label">&nbsp;</label><br>
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="fa fa-list"></i> View List
-                        </button-->
+                        <label for="" class=" form-control-label">&nbsp;</label><br>
+                        <button type="submit" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#participant-group"> 
+                            <i class="fa fa-list"></i> Create Group
+                        </button>
                     </div>
                 </div>
 
@@ -50,6 +46,65 @@
                         </tbody>
                     </table>
                 </div>
+
+<!-- modal large -->
+<div class="modal fade" id="participant-group" tabindex="-1" role="dialog" aria-labelledby="participant-groupLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="largeModalLabel">Create Participant Group</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                    <div class="col col-sm-6">
+                        <div class="form-group">
+                            <label for="group-id" class=" form-control-label">Group Name</label>
+                            <input type="text" id="group-id" name="group_name" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <p>Select Participant</p>
+                <hr>
+                <div class="row">
+                    <div class="col col-md-5">
+                        <div class="form-group">
+                            <Select2 v-model="participantId" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
+                        </div>
+                    </div>
+                    <div class="col col-md-2 text-center">
+                        <div class="row">
+                            <div class="col col-sm-12">
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fa fa-reply"></i>
+                                </button>
+                            </div>&nbsp;
+                            <div class="col col-sm-12">
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fa fa-share"></i>
+                                </button>
+                            </div>   
+                        </div>
+                    </div>
+                    <div class="col col-md-5">
+                        <div class="form-group">
+                            <select id="group-participant" name="group-participant" multiple="" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-lg-12">
+                        <button class="btn btn-sm btn-primary pull-right">Save</button>
+                    </div>
+                </div>
+			</div>	
+		</div>
+	</div>
+</div>
+<!-- end modal large -->
 </template>
 
 <script>
@@ -66,6 +121,8 @@ export default {
             participants            : [],
             participantId         : '',
             userDataForSelect: [],
+            userDataForSelectParticipant : [],
+            userDataSelected: [],
             userData                : [
                 {
                     'id': 1,
@@ -184,7 +241,6 @@ export default {
                     if(name.includes(str)){
                         scope.tmpDisplayParticipants.push(value)
                     }
-
                     if(key){
                         console.log('')
                     }
@@ -208,6 +264,7 @@ export default {
         this.userData.forEach(function(value){
             self.userDataForSelect.push({'id':value.id, 'text': value.name});
         });
+        this.userDataForSelectParticipant = this.userData;
     }
 }
 </script>
