@@ -45,6 +45,7 @@
 		</div>
 
 	</div>
+
 </template>
 
 <style>
@@ -70,7 +71,97 @@ export default {
     data () {
      
        return {
-            
+            userDataForSelectParticipant: [],
+            userData : [
+                {
+                    'id': 1,
+                    'name' : 'Thorn Sovannarath',
+                    'occupy' : 'Developer',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 2,
+                    'name' : 'Duy Panharith',
+                    'occupy' : 'Director',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 3,
+                    'name' : 'Kim Chong',
+                    'occupy' : 'Manager',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 4,
+                    'name' : 'Heng Sophat',
+                    'occupy' : 'Coordinator',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 5,
+                    'name': 'Heng Siyouer',
+                    'occupy' : 'Admin',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 6,
+                    'name' : 'Huy Lyly',
+                    'occupy' : 'Secreterist',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 7,
+                    'name' : 'Ly Chenglim',
+                    'occupy' : 'Secreterist',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 8,
+                    'name' : 'Say Sopheak',
+                    'occupy' : 'Secreterist',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 9,
+                    'name': 'Morn Sopheaktra',
+                    'occupy' : 'Secreterist',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id' : 10,
+                    'name' : 'Top Sophea',
+                    'occupy' : 'Secreterist',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                },
+                {
+                    'id': 11,
+                    'name': 'Meng Sokeang',
+                    'occupy' : 'Secreterist',
+                    'organization': 'Secretary',
+                    'email': 'blabla@email.com',
+                    'phone' : '+855'
+                }
+            ]
         }
     },
     methods: {
@@ -79,7 +170,10 @@ export default {
         }
     },
     mounted() {
-        
+        var self = this;
+        this.userData.forEach(function(value){
+            self.userDataForSelectParticipant.push({'id':value.id, 'text': value.name});
+        });
     }
 }
 </script>

@@ -62,7 +62,7 @@
                     <div class="col col-sm-6">
                         <div class="form-group">
                             <label for="group-id" class=" form-control-label">Group Name</label>
-                            <input type="text" id="group-id" name="group_name" class="form-control">
+                            <input type="text" id="group-id" name="group_name" class="form-control" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -71,18 +71,21 @@
                 <div class="row">
                     <div class="col col-md-5">
                         <div class="form-group">
-                            <Select2 v-model="participantId" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
+                            <input type="text" class="form-control" autocomplete="off" placeholder="Search" v-on:keyup="searchUser()" v-model="search_participant">
+                            <select name="" id="" multiple class="form-control" >
+
+                            </select>
                         </div>
                     </div>
                     <div class="col col-md-2 text-center">
                         <div class="row">
                             <div class="col col-sm-12">
-                                <button class="btn btn-sm btn-primary">
+                                <button class="btn btn-sm btn-light">
                                     <i class="fa fa-reply"></i>
                                 </button>
                             </div>&nbsp;
                             <div class="col col-sm-12">
-                                <button class="btn btn-sm btn-primary">
+                                <button class="btn btn-sm btn-light">
                                     <i class="fa fa-share"></i>
                                 </button>
                             </div>   
@@ -90,7 +93,7 @@
                     </div>
                     <div class="col col-md-5">
                         <div class="form-group">
-                            <select id="group-participant" name="group-participant" multiple="" class="form-control">
+                            <select id="group-participant" name="group-participant" multiple="" class="form-control" size="10">
                             </select>
                         </div>
                     </div>
@@ -109,6 +112,7 @@
 
 <script>
 import Select2 from 'vue3-select2-component';
+//import GroupParticipant from 'vue3-select2-component';
 export default {
     name: 'Participant',
     components: {
@@ -121,9 +125,9 @@ export default {
             participants            : [],
             participantId         : '',
             userDataForSelect: [],
-            userDataForSelectParticipant : [],
+            search_participant : "",
             userDataSelected: [],
-            userData                : [
+            userData : [
                 {
                     'id': 1,
                     'name' : 'Thorn Sovannarath',
@@ -264,7 +268,6 @@ export default {
         this.userData.forEach(function(value){
             self.userDataForSelect.push({'id':value.id, 'text': value.name});
         });
-        this.userDataForSelectParticipant = this.userData;
     }
 }
 </script>
