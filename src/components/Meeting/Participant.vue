@@ -73,7 +73,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control" autocomplete="off" placeholder="Search" v-on:keyup="searchUser()" v-model="search_participant">
                             <select name="" id="" multiple class="form-control" >
-
+                                <option v-for="user in userGroupSearch" v-bind:key="user.id" v-bind:value="user.id">{{user.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -126,6 +126,7 @@ export default {
             participantId         : '',
             userDataForSelect: [],
             search_participant : "",
+            userGroupSearch: [],
             userDataSelected: [],
             userData : [
                 {
@@ -261,6 +262,20 @@ export default {
                     scope.participants.push(value);
                 }
             })
+        },
+        searchUser() {
+            let scope = this;
+            scope.userGroupSearch = [];
+            var str = scope.search_participant;
+            this.userData.forEach(function(value, key){
+                var name = value.name.toLowerCase()
+                if(name.includes(str)){
+                    scope.userGroupSearch.push(value)
+                }
+                if(key){
+                    console.log('')
+                }
+            });
         }
     },
     mounted() {
