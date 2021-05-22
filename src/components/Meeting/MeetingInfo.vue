@@ -118,7 +118,8 @@ export default {
             next_topic      : '',
             other           : '',
             comment         : '',
-            summary         : ''
+            summary         : '',
+            value : ''
         }
     },
     methods: {

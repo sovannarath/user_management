@@ -71,9 +71,9 @@
                 <div class="row">
                     <div class="col col-md-5">
                         <div class="form-group">
-                            <input type="text" class="form-control" autocomplete="off" placeholder="Search" v-on:keyup="searchUser()" v-model="search_participant">
+                            <input type="text" class="form-control" autocomplete="off" placeholder="Search" v-on:keydown="searchUser()" v-model="search_participant">
                             <select name="" id="" multiple class="form-control" >
-                                <option v-for="user in userGroupSearch" v-bind:key="user.id" v-bind:value="user.id">{{user.name}}</option>
+                                <option v-for="userG in userGroupSearch" v-bind:key="userG.id" v-bind:value="userG.id">{{userG.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -264,18 +264,23 @@ export default {
             })
         },
         searchUser() {
-            let scope = this;
-            scope.userGroupSearch = [];
-            var str = scope.search_participant;
-            this.userData.forEach(function(value, key){
-                var name = value.name.toLowerCase()
-                if(name.includes(str)){
-                    scope.userGroupSearch.push(value)
-                }
-                if(key){
-                    console.log('')
-                }
-            });
+            if(this.search_participant != ""){
+                let scope = this;
+                scope.userGroupSearch = [];
+                var str = scope.search_participant.toLowerCase();
+                this.userData.forEach(function(value, key){
+                    var name = value.name.toLowerCase();
+                    if(name.includes(str)){
+                        scope.userGroupSearch.push(value)
+                    }
+                    if(key){
+                        console.log('')
+                    }
+                });
+            }
+            else {
+               this.userGroupSearch = [];
+            }
         }
     },
     mounted() {

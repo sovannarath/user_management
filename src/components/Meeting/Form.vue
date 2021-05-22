@@ -170,10 +170,7 @@ export default {
         }
     },
     mounted() {
-        var self = this;
-        this.userData.forEach(function(value){
-            self.userDataForSelectParticipant.push({'id':value.id, 'text': value.name});
-        });
+       
     }
 }
 </script>
