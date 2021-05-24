@@ -7,7 +7,7 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="" class=" form-control-label">&nbsp;</label><br>
-                        <button type="submit" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#participant-group"> 
+                        <button type="submit" @click="clearSelectGroup()" class="btn btn-primary btn-sm"> 
                             <i class="fa fa-list"></i> Create Group
                         </button>
                     </div>
@@ -59,23 +59,61 @@
 			</div>
 			<div class="modal-body">
                 <div class="row">
-                    <div class="col col-sm-6">
-                        <div class="form-group">
-                            <label for="group-id" class=" form-control-label">Group Name</label>
-                            <input type="text" id="group-id" name="group_name" class="form-control" autocomplete="off">
+                    <div class="col col-sm-6" style="border-right: 1px solid gray;">
+                        <div class="table-responsive m-b-40">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="border-top:none !important;padding: 0.30rem;">Group List</th>
+                                        <th style="border-top:none !important;padding: 0.30rem;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="group in participantGroupList" v-bind:key="group.id">
+                                        <td>{{group.text}}</td>
+                                        <td>
+                                            <div class="table-data-feature">
+                                                <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="edit" @click="editParticipantGroup(group)">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+                                                <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete" @click="deleteParticipantGroup(group)">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
-                <p>Select Participant</p>
-                <hr>
-                <div class="row">
-                    <div class="col col-md-5">
+                    <div class="col col-sm-6">
+                        <h5>Create New Group</h5>
+                        <hr>
+                        <div class="form-group">
+                            <label for="group-id" class=" form-control-label">Name</label>
+                            <input type="text" id="group-id" v-model="groupName" name="group_name" class="form-control" autocomplete="off">
+                        </div>
+
                         <div class="form-group">
                             <input type="text" class="form-control" autocomplete="off" placeholder="Search" v-on:keydown="searchUser()" v-model="search_participant">
-                            <select name="" id="" multiple class="form-control" >
+                            <select v-model="s_g_part" name="" id="" multiple class="form-control" v-on:change="searchSelect(s_g_part)">
                                 <option v-for="userG in userGroupSearch" v-bind:key="userG.id" v-bind:value="userG.id">{{userG.name}}</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <select id="group-participant" name="group-participant" multiple="" class="form-control" size="10">
+                                <option v-for="part_selected in userDataSelected" v-bind:key="part_selected.id" v-bind:value="part_selected.id">{{part_selected.name}}</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-sm btn-primary pull-right" @click="saveParticipantGroup()">Save Group</button>
+                    </div>
+                </div>
+                <!--p>Select Participant</p>
+                <hr>
+                <div class="row">
+                    <div class="col col-md-5">
+                        
                     </div>
                     <div class="col col-md-2 text-center">
                         <div class="row">
@@ -92,17 +130,14 @@
                         </div>
                     </div>
                     <div class="col col-md-5">
-                        <div class="form-group">
-                            <select id="group-participant" name="group-participant" multiple="" class="form-control" size="10">
-                            </select>
-                        </div>
+                       
                     </div>
-                </div>
-                <div class="row">
+                </div-->
+                <!--div class="row">
                     <div class="col col-lg-12">
-                        <button class="btn btn-sm btn-primary pull-right">Save</button>
+                        <button class="btn btn-sm btn-primary pull-right" @click="saveParticipantGroup()">Save</button>
                     </div>
-                </div>
+                </div-->
 			</div>	
 		</div>
 	</div>
@@ -112,6 +147,7 @@
 
 <script>
 import Select2 from 'vue3-select2-component';
+import $ from 'jquery'
 //import GroupParticipant from 'vue3-select2-component';
 export default {
     name: 'Participant',
@@ -120,6 +156,24 @@ export default {
     },
     data () {
         return {
+            participantGroupList : [
+                {
+                    'id': "My Group Secretary",
+                    'text' : "My Group Secretary",
+                    'participantGroup' : [
+                        {id: 2, name: "Duy Panharith", occupy: "Director", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
+                        {id: 4, name: "Heng Sophat", occupy: "Coordinator", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
+                        {id: 1, name: "Thorn Sovannarath", occupy: "Developer", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
+                        {id: 5, name: "Heng Siyouer", occupy: "Admin", organization: "Secretary", email: "blabla@email.com",'phone' : '+855'},
+                        {id: 8, name: "Say Sopheak", occupy: "Secreterist", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
+                        {id: 9, name: "Morn Sopheaktra", occupy: "Secreterist", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
+                        {id: 10, name: "Top Sophea", occupy: "Secreterist", organization: "Secretary", email: "blabla@email.com",'phone' : '+855'},
+                        {id: 11, name: "Meng Sokeang", occupy: "Secreterist", organization: "Secretary", email: "blabla@emaiselectl.com",'phone' : '+855'},
+                    ]
+                }
+            ],
+            groupName : '',
+            s_g_part : null,
             searchParticipant       : '',
             tmpDisplayParticipants  : [],
             participants            : [],
@@ -214,7 +268,7 @@ export default {
                     'name': 'Meng Sokeang',
                     'occupy' : 'Secreterist',
                     'organization': 'Secretary',
-                    'email': 'blabla@email.com',
+                    'email': 'blabla@emaiselectl.com',
                     'phone' : '+855'
                 }
             ]
@@ -225,16 +279,21 @@ export default {
             console.log(val)
             console.log("Changed!");
         },
-        mySelectEvent({id, text}){
-            var user = {};
-            this.userData.forEach(function(value){
-                if(value.id == id){
-                    user = value
-                }
-            });
-            console.log(user);
-            this.participants.push(user);
-            console.log({id, text});
+        mySelectEvent({id, text, participantGroup}){
+            var self = this;
+            console.log('alsdkjf;la',text,'lakjsdf;lakjsd');
+            if(participantGroup == undefined){
+                this.userData.forEach(function(user){
+                    if(user.id == id){
+                        self.participants.push(user);
+                    }
+                });
+            }
+            else {
+                participantGroup.forEach(function(g_user){
+                    self.participants.push(g_user);
+                });
+            }
         },
         searchParticipants() {
             if(this.searchParticipant != ""){
@@ -281,12 +340,64 @@ export default {
             else {
                this.userGroupSearch = [];
             }
+        },
+        searchSelect(value) {
+            var self = this;
+            var selected = false;
+            this.userDataSelected.forEach(function(user){
+                if(user.id == value[0]){
+                    selected = true
+                }
+            });
+            
+            if(!selected) {
+                this.userData.forEach(function(user){
+                    if(value[0] == user.id) {
+                        self.userDataSelected.push(user)
+                    }
+                });
+            }
+            else {
+                alert("User has been selected!");
+            }
+        },
+        groupSelect({id, text}) {
+            console.log(id,text)
+        },
+        clearSelectGroup(){
+            this.userDataSelected = [];
+            this.userGroupSearch = [];
+            this.search_participant = '';
+            this.groupName = '';
+            $('#participant-group').modal("show");
+        },
+        saveParticipantGroup() {
+            var data = {};
+            data['id'] = this.groupName;
+            data['text'] = this.groupName;
+            data['participantGroup'] = [];
+            this.userDataSelected.forEach(function(user){
+                data['participantGroup'].push(user);
+            });
+            this.userDataForSelect.push(data);
+            this.participantGroupList.push(data);
+            //$('#participant-group').modal("hide");
+        },
+        editParticipantGroup(group) {
+            this.groupName = group.text;
+            this.userDataSelected = group.participantGroup;
+        },
+        deleteParticipantGroup(group) {
+            console.log(group.id);
         }
     },
     mounted() {
         var self = this;
         this.userData.forEach(function(value){
             self.userDataForSelect.push({'id':value.id, 'text': value.name});
+        });
+        this.participantGroupList.forEach(function(group){
+            self.userDataForSelect.push(group);
         });
     }
 }
