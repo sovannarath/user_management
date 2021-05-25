@@ -101,11 +101,35 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        <!--div class="form-group">
                             <select id="group-participant" name="group-participant" multiple="" class="form-control" size="10">
                                 <option v-for="part_selected in userDataSelected" v-bind:key="part_selected.id" v-bind:value="part_selected.id">{{part_selected.name}}</option>
                             </select>
+                        </div-->
+
+                        <div class="table-responsive" style="height:200px; margin-bottom:30px;">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="border-top:none !important;padding: 0.30rem;">Participant List</th>
+                                        <th style="border-top:none !important;padding: 0.30rem;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="part_selected in userDataSelected" v-bind:key="part_selected.id">
+                                        <td>{{part_selected.name}}</td>
+                                        <td>
+                                            <div class="table-data-feature">
+                                                <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete" @click="deleteParticipantFromGroup(part_selected)">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
+                        <button class="btn btn-sm btn-warning pull-right" @click="clearSelectGroup()">Clear</button>
                         <button class="btn btn-sm btn-primary pull-right" @click="saveParticipantGroup()">Save Group</button>
                     </div>
                 </div>
@@ -384,11 +408,37 @@ export default {
             //$('#participant-group').modal("hide");
         },
         editParticipantGroup(group) {
+            this.userGroupSearch = [];
             this.groupName = group.text;
             this.userDataSelected = group.participantGroup;
         },
         deleteParticipantGroup(group) {
-            console.log(group.id);
+            var indexOfParticipant = this.participantGroupList.indexOf(group);
+            this.participantGroupList.splice(indexOfParticipant, 1);
+        },
+        deleteParticipantFromGroup(participantObj) {
+            var self = this;
+            var Par_group;
+            var indexOfParticipant;
+            this.participantGroupList.forEach(function(group){
+                if(group.text == self.groupName){
+                    Par_group = group
+                }
+            });
+            
+
+            if(Par_group != undefined) {
+                //console.log("Oh", Par_group, "Hi");
+                //console.log(Par_group['participantGroup'].indexOf(participantObj));
+                indexOfParticipant = Par_group['participantGroup'].indexOf(participantObj);
+                Par_group['participantGroup'].splice(indexOfParticipant, 1);
+            }
+            else {
+                indexOfParticipant = this.userDataSelected.indexOf(participantObj);
+                this.userDataSelected.splice(indexOfParticipant, 1);
+            }
+            
+            
         }
     },
     mounted() {
