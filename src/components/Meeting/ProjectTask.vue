@@ -45,7 +45,7 @@
             <hr>
             <div class="form-group">
                 <label for="file-multiple-input" class=" form-control-label">Upload</label>
-                <input type="file" id="file-multiple-input" name="file-multiple-input" multiple="" class="form-control-file">
+                <input type="file" id="file-multiple-input" name="file-multiple-input" ref="myFiles" @change="agendaAttachment()" multiple="" class="form-control-file">
             </div>
 
             <div class="table-responsive table--no-card m-b-40">
@@ -65,10 +65,10 @@
                             <td>{{attachment.type.name}}</td>
                             <td>
                                 <div class="table-data-feature">
-                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                    <!--button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
                                         <i class="zmdi zmdi-edit"></i>
-                                    </button>
-                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                    </button-->
+                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete" @click="deleteAttacment(attachment)">
                                         <i class="zmdi zmdi-delete"></i>
                                     </button>
                                 </div>
@@ -136,7 +136,7 @@
                                     <button v-on:click="editAction(dialog.id, projectTask.id)" class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
                                         <i class="zmdi zmdi-edit"></i>
                                     </button>
-                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete" @click="deleteDiscussionLog(dialog, projectTask.id)">
                                         <i class="zmdi zmdi-delete"></i>
                                     </button>
                                 </div>
@@ -185,7 +185,7 @@
                     <div class="col col-lg-12">
                         <button v-on:click="createOrUpdateAgenda()" class="btn btn-sm btn-primary pull-right">Save</button>
                     </div>
-                
+
                 </div>
 
 			</div>	
@@ -367,10 +367,36 @@ export default {
             frm_summary : "",
             speakerId: {},
             dialogId: {},
-            relatedId: {}
+            relatedId: {},
+            file : null,
         }
     },
     methods: {
+        deleteDiscussionLog(dialog, agenda_id) {
+            var indexOfDialog = this.agendaDialog['agenda-' + agenda_id].indexOf(dialog);
+            this.agendaDialog['agenda-' + agenda_id].splice(indexOfDialog, 1);
+            //console.log(dialog, agenda_id);
+        },
+        deleteAttacment(attachFile) {
+            //console.log(attachFile);
+            var indexOfFile = this.attachments.indexOf(attachFile);
+            //console.log(indexOfFile);
+            this.attachments.splice(indexOfFile, 1);
+        },
+        agendaAttachment(){
+            var self = this
+            this.$refs.myFiles.files.forEach(function(file){
+                var fileData = {};
+                fileData['id'] = self.attachments.length + 1;
+                fileData['name'] = file.name;
+                fileData['type'] = {
+                    'id' : file.type,
+                    'name' : file.type
+                }
+                self.attachments.push(fileData);
+            });
+            this.$refs.myFiles.files = [];
+        },
         myChangeEvent(val){
             console.log(val);
         },
@@ -408,17 +434,17 @@ export default {
                         }
                     });
                     this.updateSummary();
-                    $('#largeModal').modal('hide')
+                    $('#largeModal').modal('hide');
                 }
                 else {
                     console.log('update!')
                 }
             }
-       },
-       addDialog(project_id) {
+        },
+        addDialog(project_id) {
             var self = this;
             var data = {
-                'id' : this.agendaDialog['agenda-'+project_id].length+1,
+                'id' : this.agendaDialog['agenda-' + project_id].length+1,
                 'description' : this.description['descript-'+project_id]
             };
 
@@ -445,7 +471,6 @@ export default {
 
                 this.dialogId['dialogId-' + project_id] = data.id;
                 this.agendaDialog['agenda-'+project_id].push(data);
-            
             }
             else {
                 this.agendaDialog['agenda-'+project_id].forEach(function(value,idx){
@@ -454,8 +479,8 @@ export default {
                     }
                 });
             }
-       },
-       editAgenda(project_id) {
+        },
+        editAgenda(project_id) {
            var self = this;
            this.projectTasks.forEach(function(value){
                if(project_id == value.id){
@@ -464,14 +489,14 @@ export default {
                    self.frm_summary     = value.description;
                }
            });
-       },
-       updateSummary(){
+        },
+        updateSummary(){
             var self = this;
             this.projectTasks.forEach(function(value){
                 self.summary['summary-'+value.id] = value.description
             });
-       },
-       editAction(dialog_id, project_id) {
+        },
+        editAction(dialog_id, project_id) {
            var actionRecord = {};
            this.agendaDialog['agenda-'+project_id].forEach(function(value){
                if (value.id == dialog_id){
@@ -482,14 +507,14 @@ export default {
            this.action_type_id['action-'+project_id]    = actionRecord.action['id'];
            this.speakerId['speaker-'+project_id]        = actionRecord.speaker['id'];
            this.relatedId['related-'+project_id]        = (actionRecord.related == null ? '' : actionRecord.related.id); 
-       },
-       clearDialog(project_id) {
+        },
+        clearDialog(project_id) {
            this.description['descript-' + project_id]   = "";
            this.speakerId['speaker-' + project_id]      = "";
            this.action_type_id['action-' + project_id]  = "";
            this.dialogId['dialogId-' + project_id]      = "";
            this.relatedId['related-' + project_id]      = "";
-       }
+        }
     },
     mounted() {
         var self = this;

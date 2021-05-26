@@ -129,8 +129,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <button class="btn btn-sm btn-warning pull-right" @click="clearSelectGroup()">Clear</button>
-                        <button class="btn btn-sm btn-primary pull-right" @click="saveParticipantGroup()">Save Group</button>
+                        <button class="btn btn-sm btn-primary pull-right" style="margin:2px;" @click="saveParticipantGroup()">Save Group</button>
+                        <button class="btn btn-sm btn-warning pull-right" style="margin:2px;" @click="clearSelectGroup()">Clear</button>
                     </div>
                 </div>
                 <!--p>Select Participant</p>
