@@ -28,8 +28,8 @@
                         <tbody>
                             <tr v-for="participant in participants" v-bind:key="participant.id">
                                 <td>{{participant.name}}</td>
-                                <td>{{participant.occupy}}</td>
-                                <td>{{participant.organization}}</td>
+                                <td>{{participant.role.name}}</td>
+                                <td>{{participant.organization.name}}</td>
                                 <td>{{participant.email}}</td>
                                 <td>{{participant.phone}}</td>
                                 <td>
@@ -171,8 +171,11 @@
 
 <script>
 import Select2 from 'vue3-select2-component';
+import UserAPI from '../../services/UserService'
+import ParticipantGroupAPI from '../../services/MeetingParticipantGroupService'
 import $ from 'jquery'
 //import GroupParticipant from 'vue3-select2-component';
+
 export default {
     name: 'Participant',
     components: {
@@ -181,7 +184,7 @@ export default {
     data () {
         return {
             participantGroupList : [
-                {
+                /*{
                     'id': "My Group Secretary",
                     'text' : "My Group Secretary",
                     'participantGroup' : [
@@ -194,7 +197,7 @@ export default {
                         {id: 10, name: "Top Sophea", occupy: "Secreterist", organization: "Secretary", email: "blabla@email.com",'phone' : '+855'},
                         {id: 11, name: "Meng Sokeang", occupy: "Secreterist", organization: "Secretary", email: "blabla@emaiselectl.com",'phone' : '+855'},
                     ]
-                }
+                }*/
             ],
             groupName : '',
             s_g_part : null,
@@ -206,96 +209,7 @@ export default {
             search_participant : "",
             userGroupSearch: [],
             userDataSelected: [],
-            userData : [
-                {
-                    'id': 1,
-                    'name' : 'Thorn Sovannarath',
-                    'occupy' : 'Developer',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 2,
-                    'name' : 'Duy Panharith',
-                    'occupy' : 'Director',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 3,
-                    'name' : 'Kim Chong',
-                    'occupy' : 'Manager',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 4,
-                    'name' : 'Heng Sophat',
-                    'occupy' : 'Coordinator',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 5,
-                    'name': 'Heng Siyouer',
-                    'occupy' : 'Admin',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 6,
-                    'name' : 'Huy Lyly',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 7,
-                    'name' : 'Ly Chenglim',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 8,
-                    'name' : 'Say Sopheak',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 9,
-                    'name': 'Morn Sopheaktra',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id' : 10,
-                    'name' : 'Top Sophea',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 11,
-                    'name': 'Meng Sokeang',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@emaiselectl.com',
-                    'phone' : '+855'
-                }
-            ]
+            userData : []
         }
     },
     methods: {
@@ -437,18 +351,45 @@ export default {
                 indexOfParticipant = this.userDataSelected.indexOf(participantObj);
                 this.userDataSelected.splice(indexOfParticipant, 1);
             }
-            
-            
+
+        },
+        initialUserData(){
+            var self = this;
+            UserAPI.user_list()
+            .then(data => {
+                self.userData = data;
+                data.forEach(function(user){
+                    self.userDataForSelect.push({'id': user.id, 'text': user.name});
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
+        initialGroupUser(){
+            var self = this;
+            ParticipantGroupAPI.getAllParticipantGroups()
+            .then(data => {
+                console.log(data);
+                data.forEach(function(group){
+                    self.userDataForSelect.push({'id' : group.id, 'text' : group.name});
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
         }
     },
     mounted() {
-        var self = this;
-        this.userData.forEach(function(value){
+        //var self = this;
+        this.initialUserData();
+        this.initialGroupUser();
+        /*this.userData.forEach(function(value){
             self.userDataForSelect.push({'id':value.id, 'text': value.name});
         });
         this.participantGroupList.forEach(function(group){
             self.userDataForSelect.push(group);
-        });
+        });*/
     }
 }
 </script>

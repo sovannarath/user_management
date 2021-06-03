@@ -72,7 +72,7 @@
                             </select>
                         </div>
                         
-                        <div class="form-group">
+                        <!--div class="form-group">
                             <label for="next_date" class=" form-control-label">Next Date</label>
                             <input type="date" id="next_date" v-model="next_date" name="next_date" class="form-control">
                         </div>
@@ -80,7 +80,9 @@
                         <div class="form-group">
                             <label for="next_topic" class=" form-control-label">Next Topic</label>
                             <input type="text" id="next_topic" v-model="next_topic" name="next_topic" placeholder="Enter next topic" class="form-control">
-                        </div>
+                        </div-->
+
+                        <a href="#">Previous meeting ...</a>
 
                         <div class="form-group">
                             <label for="summary" class=" form-control-label">Summary</label>
@@ -94,6 +96,8 @@
 </template>
 
 <script>
+import MeetingTypeAPI from '../../services/MeetingTypeService'
+import ProjectAPI from '../../services/ProjectService'
 
 export default {
     name: 'MeetingInfo',
@@ -124,48 +128,22 @@ export default {
     },
     methods: {
         initMeetingTypes() {
-            this.meetingTypes = [
-                {
-                    'id'    : 1,
-                    'name'  : 'DAILY MEETING',
-                },
-                {
-                    'id'    : 2,
-                    'name'  : 'WEEKLY MEETING',
-                },
-                {
-                    'id'    : 3,
-                    'name'  : 'MONTHLY MEETING',
-                },
-                {
-                    'id'    : 4,
-                    'name'  : 'MINUTE MEETING',
-                }
-            ]
+            MeetingTypeAPI.allMeetingTypes()
+            .then(data => {
+                this.meetingTypes = data;
+            })
+            .catch(err => {
+                console.log(err);
+            });
         },
         initProjects() {
-            this.projects = [
-                {
-                    'id'    : 1,
-                    'name'  : 'Z1 Data'
-                },
-                {
-                    'id'    : 2,
-                    'name'  : 'Z1 App'
-                },
-                {
-                    'id'    : 3,
-                    'name'  : 'Big Data'
-                },
-                {
-                    'id'    : 4,
-                    'name'  : 'V-Trust Apraisal'
-                },
-                {
-                    'id'    : 5,
-                    'name'  : 'Trading'
-                }
-            ]
+            ProjectAPI.allProjects()
+            .then(data => {
+                this.projects = data
+            })
+            .catch(err => {
+               console.log(err); 
+            });
         }
     },
     mounted() {
