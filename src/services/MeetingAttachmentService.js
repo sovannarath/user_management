@@ -23,9 +23,9 @@ export default {
         return {headers: header}
     },
     
-    getAllAgendas(meeting_id) {
+    getAllAttachments(meeting_id) {
         return new Promise((resolve, reject) => {
-            axios.get('/meetings/' + meeting_id + '/agendas',this.httpHeader())
+            axios.get('/meeting-agendas/' + meeting_id + '/attachments',this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -35,9 +35,9 @@ export default {
         });
     },
     
-    getAgenda(meeting_id, agenda_id) {
+    getAttachment(meeting_id, attachment_id) {
         return new Promise((resolve, reject) => {
-            axios.get('/meetings/' + meeting_id + '/agendas/' + agenda_id, this.httpHeader)
+            axios.get('/meeting-agendas/' + meeting_id + '/attachments' + attachment_id, this.httpHeader)
             .then(response => {
                 resolve(response.data)
             })
@@ -47,9 +47,9 @@ export default {
         })
     },
     
-    createAgenda(meeting_id, data) {
+    createAttachment(meeting_id, data) {
         return new Promise((resolve, reject) => {
-            axios.post('/meetings/' + meeting_id + '/agendas/', data, this.httpHeader())
+            axios.post('/meeting-agendas/' + meeting_id + '/attachments', data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -59,9 +59,9 @@ export default {
         });
     },
     
-    updateAgenda(meeting_id, agenda_id, data) {
+    updateAttachment(meeting_id, attachment_id, data) {
         return new Promise((resolve, reject) => {
-            axios.put('/meetings/' + meeting_id + '/agendas/' + agenda_id, data, this.httpHeader())
+            axios.put('/meeting-agendas/' + meeting_id + '/attachments' + attachment_id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -71,9 +71,9 @@ export default {
         });
     },
     
-    deleteAgenda(meeting_id, agenda_id) {
+    deleteAttachment(meeting_id, attachment_id) {
         return new Promise((resolve, reject) => {
-            axios.delete('/meetings/' + meeting_id + '/agendas/' + agenda_id, this.httpHeader())
+            axios.delete('/meeting-agendas/' + meeting_id + '/attachments' + attachment_id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
