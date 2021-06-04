@@ -25,8 +25,11 @@
                 </h5>
             </div>
             <div class="col col-sm-6">
-                <button class="btn btn-sm btn-primary pull-right" type="button" data-toggle="modal" data-target="#largeModal" v-on:click="editAgenda(projectTask.id)">
-                    <i class="zmdi zmdi-edit"></i> Edit
+                <button class="btn btn-sm pull-right" type="button" v-on:click="deleteAgend(meeting_id, projectTask.id)">
+                    <i class="fa fa-trash"></i>
+                </button>
+                <button class="btn btn-sm pull-right" type="button" data-toggle="modal" data-target="#largeModal" v-on:click="editAgenda(projectTask.id)">
+                    <i class="fa fa-edit"></i>
                 </button>
             </div>
         </div>
@@ -126,7 +129,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="dialog in agendaDialog['agenda-'+projectTask.id]" v-bind:key="dialog.id">
+                        <tr v-for="dialog in agendaDialog['agenda-' + projectTask.id]" v-bind:key="dialog.id">
                             <td>{{dialog.speaker['name']}}</td>
                             <td>{{dialog.action['name']}}</td>
                             <td>{{dialog.description}}</td>
@@ -176,14 +179,47 @@
                             <label for="frm_summary" class=" form-control-label">Agenda Summary</label>
                             <textarea id="frm_summary" v-model="frm_summary" placeholder="Enter agenda summary" rows="3" class="form-control"></textarea>
                         </div>
-
                         <input type="hidden" v-model="project_id">
                     </div>
                 </div>
+
                 <div class="row">
 
                     <div class="col col-lg-12">
                         <button v-on:click="createOrUpdateAgenda()" class="btn btn-sm btn-primary pull-right">Save</button>
+                    </div>
+
+                </div>
+
+			</div>	
+		</div>
+	</div>
+</div>
+<!-- end modal large -->
+
+<!-- Delete Agenda -->
+<div class="modal fade" id="deleteAgenda" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="largeModalLabel">Delete Confirmation</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				
+                <div class="row">
+                    <div class="col col-md-12">
+                        <p>Are you sure?</p>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col col-lg-12">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button v-on:click="deleteAgenda()" class="btn btn-sm btn-primary pull-right">OK</button>
                     </div>
 
                 </div>
@@ -199,127 +235,24 @@
 <script>
 import Select2 from 'vue3-select2-component';
 import $ from 'jquery'
-//import ProjectTaskForm from '../../components/Meeting/ProjectTaskForm'
+import MeetingAgendaAPI from '../../services/MeetingAgendaService'
+//import MeetingAttachmentAPI from '../../services/MeetingAttachmentService'
+//import MeetingDiscussionLogAPI from '../../services/MeetingDiscussionLogService'
+import MeetingActionTypeAPI from '../../services/MeetingTypeService'
+//import MeetingParticipantAPI from '../../services/MeetingParticipantService'
+import UserAPI from '../../services/UserService'
 
 export default {
     name: 'ProjectTask',
     components: {
-        //ProjectTaskForm
         Select2
     },
     data () {
         return {
-            meetingActionTypes : [
-                {
-                    'id' : 1,
-                    'name' : 'ASK QUESTION', 
-                },
-                {
-                    'id' : 2,
-                    'name' : 'ANSWER', 
-                },
-                {
-                    'id' : 3,
-                    'name' : 'COMMENT'
-                }
-            ],
-            userData : [
-                {
-                    'id': 1,
-                    'name' : 'Thorn Sovannarath',
-                    'occupy' : 'Developer',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 2,
-                    'name' : 'Duy Panharith',
-                    'occupy' : 'Director',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 3,
-                    'name' : 'Kim Chong',
-                    'occupy' : 'Manager',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 4,
-                    'name' : 'Heng Sophat',
-                    'occupy' : 'Coordinator',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 5,
-                    'name': 'Heng Siyouer',
-                    'occupy' : 'Admin',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 6,
-                    'name' : 'Huy Lyly',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 7,
-                    'name' : 'Ly Chenglim',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 8,
-                    'name' : 'Say Sopheak',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 9,
-                    'name': 'Morn Sopheaktra',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id' : 10,
-                    'name' : 'Top Sophea',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                },
-                {
-                    'id': 11,
-                    'name': 'Meng Sokeang',
-                    'occupy' : 'Secreterist',
-                    'organization': 'Secretary',
-                    'email': 'blabla@email.com',
-                    'phone' : '+855'
-                }
-            ],
-            projectTasks : [
-                {
-                    'id' : 1,
-                    'name' : 'Update App Z1',
-                    'description': 'This content of updating information of Z1 app!'
-                }
-            ],
+            meeting_id : "",
+            meetingActionTypes : [],
+            userData : [],
+            projectTasks : [],
             attachments : [
                 {
                     'id': 1,
@@ -403,29 +336,52 @@ export default {
         mySelectEvent({id, text}){
             console.log({id, text})
         },
+        callToDeleteAgenda(){
+            $("#deleteAgenda").modal('show');
+        },
+        deleteAgenda(meeting_id, agenda_id) {
+            MeetingAgendaAPI.deleteAgenda(meeting_id, agenda_id)
+            .then(data => {
+                console.log(data)
+            })
+            .catch(err => { 
+                console.log(err);
+            });
+        },
         newAgenda() {
             this.project_id = "";
             this.task_name = "";
             this.project_id = "";
         },
         createOrUpdateAgenda() {
+            var self = this
             if(this.project_id == ""){
                 if(this.task_name != "") {
+
                     var data = {
                         'id' : this.projectTasks.length+1,
                         'name' : this.task_name,
+                        'meeting_id' : this.meeting_id,
                         'description' : this.frm_summary
                     }
-                    this.projectTasks.push(data)
-                    $('#largeModal').modal('hide')
+
+                    MeetingAgendaAPI.createAgenda(this.meeting_id ,data)
+                    .then(data => {
+                        self.projectTasks.push(data);
+                    })
+                    .catch( err => {
+                        console.log(err);
+                    });
+                    
+                    $('#largeModal').modal('hide');
+
                 }
                 else {
-                    console.log('insert!')
+                    console.log('insert!');
                 }
             }
             else {
                 if(this.task_name != "") {
-                    var self = this;
                     this.projectTasks.forEach(function(value){
                         if (self.project_id == value.id){
                             value.name = self.task_name;
@@ -514,14 +470,51 @@ export default {
            this.action_type_id['action-' + project_id]  = "";
            this.dialogId['dialogId-' + project_id]      = "";
            this.relatedId['related-' + project_id]      = "";
+        },
+        initialUserData(){
+            var self = this;
+            UserAPI.user_list()
+            .then(data => {
+                self.userData = data;
+                self.userData.forEach(function(value){
+                    self.userDataForSelect.push({'id' : value.id, 'text' : value.name});
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
+        initialMeetingActionType() {
+            var self = this;
+            MeetingActionTypeAPI.allMeetingTypes()
+            .then(data => {
+                self.meetingActionTypes = data;
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }, 
+        initialMeetingAgenda(meeting_id){
+            var self = this;
+            MeetingAgendaAPI.getAllAgendas(meeting_id)
+            .then(data => {
+                self.projectTasks = data;
+            })
+            .catch(err => {
+                console.log(err);
+            });
         }
     },
     mounted() {
-        var self = this;
-        this.userData.forEach(function(value){
-            self.userDataForSelect.push({'id' : value.id, 'text' : value.name});
-        });
+        this.initialUserData();
+        this.initialMeetingActionType();
+        this.initialMeetingAgenda();
         this.updateSummary();
+        
+        var urlPath = window.location.pathname.split('/')
+        if (urlPath[urlPath.length - 1] == 'edit'){
+            this.meeting_id = urlPath[urlPath.length - 2];
+        }
     }
 }
 </script>

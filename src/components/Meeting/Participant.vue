@@ -373,6 +373,12 @@ export default {
                 console.log(data);
                 data.forEach(function(group){
                     self.userDataForSelect.push({'id' : group.id, 'text' : group.name});
+                    var glist = {
+                        'id': group.id,
+                        'text' : group.name,
+                        'participantGroup' : group.participants
+                    };
+                    self.participantGroupList.push(glist);
                 });
             })
             .catch(err => {
@@ -381,15 +387,8 @@ export default {
         }
     },
     mounted() {
-        //var self = this;
         this.initialUserData();
         this.initialGroupUser();
-        /*this.userData.forEach(function(value){
-            self.userDataForSelect.push({'id':value.id, 'text': value.name});
-        });
-        this.participantGroupList.forEach(function(group){
-            self.userDataForSelect.push(group);
-        });*/
     }
 }
 </script>

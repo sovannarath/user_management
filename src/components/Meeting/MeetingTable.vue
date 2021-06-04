@@ -8,6 +8,9 @@
 
 <div class="user-data m-b-30">
   <h3 class="title-3 m-b-30 pull-left"><i class="zmdi zmdi-account-calendar"></i>Meeting</h3>
+  <button class="btn btn-sm btn-primary" v-on:click="callCreateMeeting()">
+      <i class="fa fa-plus"></i> New Meeting
+  </button>
   <router-link style="margin-right:35px;" class="btn btn-sm btn-primary pull-right" to="/meetings/create">
     <i class="fa fa-plus"></i> New Record
   </router-link>
@@ -100,10 +103,57 @@
 </div>
 </div>
 <!-- end modal static -->
+
+<!-- Create Meeting Modal -->
+<div class="modal fade" id="createMeetingModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticModalLabel">Create Meeting</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>   
+            </div>
+            
+            <div class="modal-body center">
+
+                <div class="form-group">
+                    <label for="meetingRecord" class=" form-control-label">Meeting Name</label>
+                    <input type="text" id="meetingRecord" name="meetingName" v-model="meetingName" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="project_id" class=" form-control-label">Project</label>
+                    <select v-model="project_id" name="project_id" id="project_id" class="form-control">
+                        <option disabled selected >-- Please select project --</option>
+                        <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">{{project.name}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="meeting_type_id" class=" form-control-label">Meeting Type</label>
+                    <select name="meeting_type_id" v-model="meetingType_id" id="meeting_type_id" class="form-control">
+                        <option disabled selected value="0">Please select meeting type</option>
+                        <option v-for="meetingType in meetingTypes" v-bind:key="meetingType.id" v-bind:value="meetingType.id">{{meetingType.name}}</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-info btn-del" v-on:click="createMeetingRecord()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end modal static -->
+
 </template>
 
 <script>
 import MeetingAPI from '../../services/MeetingService'
+import MeetingTypeAPI from '../../services/MeetingTypeService'
+import ProjectAPI from '../../services/ProjectService'
 import $ from 'jquery'
 
 export default {
@@ -113,22 +163,46 @@ export default {
     },
     data() {
         return {
-            meetings: null,
-            is_succ_hide: true
+            meetings : [],
+            is_succ_hide : true,
+            meetingName : "",
+            projects : [],
+            meetingTypes : [],
+            project_id : "",
+            meetingType_id : "",
         }
     },
     methods: {
+        callCreateMeeting(){
+            $("#createMeetingModal").modal("show");
+        },
+        createMeetingRecord(){
+            var self = this;
+            var data = {};
+            data['name'] = this.meetingName;
+            data['project'] = {"id" : this.project_id};
+            data['type'] = {"id" : this.meetingType_id}
+            MeetingAPI.createMeeting(data)
+            .then(data => {
+                self.meetings.push(data);
+                this.$router.push("/meetings/" + data.id + "/edit");
+                $("#createMeetingModal").modal("hide");
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
         loadMeetings() {
             MeetingAPI.allMeetings()
             .then(response => {
                 for (var i = 0; i <= (response.length - 1); i++) {
-                    var date = new Date(response[i].date)
-                    var strDate = date.getFullYear() + '-'
+                    var date = new Date(response[i].date);
+                    var strDate = date.getFullYear() + '-';
                     if( (date.getMonth()+1) < 10)
                         strDate += '0'
                     response[i].date = strDate + (date.getMonth()+1) + '-' + date.getDate()
                 }
-                this.meetings = response
+                this.meetings.push(response);
             })
             .catch(err => {
                 console.log(err)
@@ -156,10 +230,32 @@ export default {
                 console.log(err)
             })
             .finally(() => {})
+        }, 
+        loadMeetingTypes() {
+            var self = this;
+            MeetingTypeAPI.allMeetingTypes()
+            .then(data => {
+                self.meetingTypes = data;
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
+        loadProjects() {
+            var self = this;
+            ProjectAPI.allProjects()
+            .then(data => {
+                self.projects = data;
+            })
+            .catch(err => {
+                console.log(err);
+            });
         }
     },
     mounted() {
         this.loadMeetings()
+        this.loadMeetingTypes();
+        this.loadProjects();
     }
 }
 </script>
