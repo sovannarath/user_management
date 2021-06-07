@@ -33,7 +33,7 @@
                         <MeetingInfo></MeetingInfo>
                     </div>
                     <div class="tab-pane fade" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
-                        <ProjectTask></ProjectTask>
+                        <MeetingAgenda></MeetingAgenda>
                     </div>
                     <div class="tab-pane fade" id="nav-participant" role="tabpanel" aria-labelledby="nav-participant-tab">
                         <Participant></Participant>
@@ -57,7 +57,7 @@
 <script>
 import MeetingInfo from '../../components/Meeting/MeetingInfo'
 import Participant from '../../components/Meeting/Participant'
-import ProjectTask from '../../components/Meeting/ProjectTask'
+import MeetingAgenda from '../../components/Meeting/MeetingAgenda'
 //import DiscussionLog from '../../components/Meeting/DiscussionLogs'
 
 export default {
@@ -65,7 +65,7 @@ export default {
     components: {
         MeetingInfo,
         Participant,
-        ProjectTask,
+        MeetingAgenda,
         //DiscussionLog
     },
     data () {

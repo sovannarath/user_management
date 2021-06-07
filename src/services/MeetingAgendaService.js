@@ -49,7 +49,7 @@ export default {
     
     createAgenda(meeting_id, data) {
         return new Promise((resolve, reject) => {
-            axios.post('/meetings/' + meeting_id + '/agendas/', data, this.httpHeader())
+            axios.post('/meetings/' + meeting_id + '/agendas', data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })

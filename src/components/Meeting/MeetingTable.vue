@@ -8,12 +8,12 @@
 
 <div class="user-data m-b-30">
   <h3 class="title-3 m-b-30 pull-left"><i class="zmdi zmdi-account-calendar"></i>Meeting</h3>
-  <button class="btn btn-sm btn-primary" v-on:click="callCreateMeeting()">
+  <button class="btn btn-sm btn-primary pull-right" style="margin-right:35px;" v-on:click="callCreateMeeting()">
       <i class="fa fa-plus"></i> New Meeting
   </button>
-  <router-link style="margin-right:35px;" class="btn btn-sm btn-primary pull-right" to="/meetings/create">
+  <!--router-link style="margin-right:35px;" class="btn btn-sm btn-primary pull-right" to="/meetings/create">
     <i class="fa fa-plus"></i> New Record
-  </router-link>
+  </router-link!-->
     <!--div class="filters m-b-45">
         <div class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
             <select class="js-select2" name="property">
@@ -37,12 +37,12 @@
         <table class="table">
             <thead>
                 <tr>
-                  <td>
+                  <!--td>
                     <label class="au-checkbox">
                       <input type="checkbox">
                       <span class="au-checkmark"></span>
                     </label>
-                  </td>
+                  </td!-->
                   <td>Project Name</td>
                   <td>Topic</td>
                   <td>Meeting Type</td>
@@ -52,12 +52,12 @@
             </thead>
             <tbody>
                 <tr v-for="meeting in meetings" v-bind:key="meeting.id" v-bind:id="'meeting-id-' + meeting.id">
-                  <td>
+                  <!--td>
                     <label class="au-checkbox">
                       <input type="checkbox">
                       <span class="au-checkmark"></span>
                       </label>
-                  </td>
+                  </td!-->
                   <td>{{meeting.project.name}}</td>
                   <td>{{meeting.name}}</td>
                   <td>{{meeting.type.name}}</td>
@@ -97,7 +97,7 @@
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-<button type="button" class="btn btn-danger btn-del" v-on:click="deleteRecord">Yes</button>
+<button type="button" class="btn btn-danger btn-del" v-on:click="deleteRecord()">Yes</button>
 </div>
 </div>
 </div>
@@ -170,11 +170,14 @@ export default {
             meetingTypes : [],
             project_id : "",
             meetingType_id : "",
+            is_delete : false,
+            is_not_delete : false,
         }
     },
     methods: {
         callCreateMeeting(){
             $("#createMeetingModal").modal("show");
+            
         },
         createMeetingRecord(){
             var self = this;
@@ -193,6 +196,7 @@ export default {
             });
         },
         loadMeetings() {
+            var self = this;
             MeetingAPI.allMeetings()
             .then(response => {
                 for (var i = 0; i <= (response.length - 1); i++) {
@@ -201,8 +205,8 @@ export default {
                     if( (date.getMonth()+1) < 10)
                         strDate += '0'
                     response[i].date = strDate + (date.getMonth()+1) + '-' + date.getDate()
+                    self.meetings.push(response[i]);
                 }
-                this.meetings.push(response);
             })
             .catch(err => {
                 console.log(err)
@@ -215,10 +219,13 @@ export default {
             modal.modal('show');
             modal.find('.btn-del').attr('value', thisBtn.attr('value'));
         },
+        isDelete(){
+            this.is_delete = true;
+        },
         deleteRecord() {
             var id = $('.btn-del').attr('value')
             var modal = $('#delContactTypeModal');
-            var typeId = $('#type-id-' + id)
+            var typeId = $('#meeting-id-' + id)
             MeetingAPI.deleteMeeting(id)
             .then(response => {
                 this.deleted = response
@@ -229,7 +236,7 @@ export default {
             .catch(err => {
                 console.log(err)
             })
-            .finally(() => {})
+            .finally(() => {});
         }, 
         loadMeetingTypes() {
             var self = this;
@@ -253,7 +260,7 @@ export default {
         }
     },
     mounted() {
-        this.loadMeetings()
+        this.loadMeetings();
         this.loadMeetingTypes();
         this.loadProjects();
     }

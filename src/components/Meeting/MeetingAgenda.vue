@@ -2,45 +2,45 @@
 
 <div class="row">
     <div class="col col-md-12">
-        <button v-on:click="newAgenda()" style="margin-top:10px;" type="button" class="btn btn-secondary mb-1 pull-right" data-toggle="modal" data-target="#largeModal">
+        <button v-on:click="callAgendaFrom()" style="margin-top:10px;" type="button" class="btn btn-secondary mb-1 pull-right">
             Add New Agenda
         </button>
     </div>
 </div>
-<div class="row" v-if="projectTasks == null">
+<div class="row" v-if="meetingAgendas == null || meetingAgendas == ''">
     <div class="col col-sm-12 text-center">
         No data avialable
     </div>
 </div>
 <div id="accordion" style="margin-top:10px;">
 
-  <div v-for="projectTask in projectTasks" v-bind:key="projectTask.id" class="card">
+  <div v-for="agenda in meetingAgendas" v-bind:key="agenda.id" class="card">
     <div class="card-header" id="headingOne">
         <div class="row">
             <div class="col col-sm-6">
                 <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#collapse-'+projectTask.id" aria-expanded="true" aria-controls="collapseOne">
-                        {{projectTask.name}}
+                    <button class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#collapse-'+agenda.id" aria-expanded="true" aria-controls="collapseOne">
+                        {{agenda.name}}
                     </button>
                 </h5>
             </div>
             <div class="col col-sm-6">
-                <button class="btn btn-sm pull-right" type="button" v-on:click="deleteAgend(meeting_id, projectTask.id)">
+                <button class="btn btn-sm pull-right" type="button" v-on:click="callToDeleteAgenda(agenda.id)">
                     <i class="fa fa-trash"></i>
                 </button>
-                <button class="btn btn-sm pull-right" type="button" data-toggle="modal" data-target="#largeModal" v-on:click="editAgenda(projectTask.id)">
+                <button class="btn btn-sm pull-right" type="button" data-toggle="modal" data-target="#largeModal" v-on:click="callAgendaFromUpdate(agenda.id)">
                     <i class="fa fa-edit"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <div v-bind:id="'collapse-'+projectTask.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+    <div v-bind:id="'collapse-'+agenda.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body">
             
             <div class="form-group">
-                <label for="summary" class=" form-control-label">Agenda Summary</label>
-                <textarea readonly id="summary" v-model="summary['summary-'+projectTask.id]" placeholder="Enter agenda summary" rows="3" class="form-control"></textarea>
+                <label for="description" class=" form-control-label">Agenda Summary</label>
+                <p>{{agenda.description}}</p>
             </div>
 
             <br>
@@ -61,7 +61,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="attachment in attachments" v-bind:key="attachment.id">
+                        <tr v-for="attachment in agenda.attachments" v-bind:key="attachment.id">
                             <td>
                                 <a href="#">{{attachment.name}}</a>
                             </td>
@@ -88,31 +88,31 @@
                 <div class="col col-sm-6">
                     <div class="form-group">
                         <label for="description" class=" form-control-label">Description</label>
-                        <textarea id="description" v-model="description['descript-'+projectTask.id]" name="description" placeholder="Enter description" rows="8" class="form-control"></textarea>
+                        <textarea id="description" v-model="description['descript-'+agenda.id]" name="description" placeholder="Enter description" rows="8" class="form-control"></textarea>
                     </div>
                     
                 </div>
                 <div class="col col-sm-6">
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="participant" class=" form-control-label">Participant</label>
-                        <Select2 v-model="speakerId['speaker-'+projectTask.id]" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
+                        <Select2 v-model="speakerId['speaker-'+agenda.id]" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
                     </div>
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="action_type" class=" form-control-label">Type</label>
-                        <select v-model="action_type_id['action-'+projectTask.id]" id="action_type" class="form-control">
+                        <select v-model="action_type_id['action-'+agenda.id]" id="action_type" class="form-control">
                             <option v-for="meetingAction in meetingActionTypes" v-bind:key="meetingAction.id" v-bind:value="meetingAction.id">{{meetingAction.name}}</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="related_speech" class=" form-control-label">Related Speech</label>
-                        <select v-model="relatedId['related-'+projectTask.id]" id="related_speech" class="form-control">
-                            <option v-for="agenda in agendaDialog['agenda-'+projectTask.id]" v-bind:key="agenda.id" v-bind:value="agenda.id">{{agenda.description}}</option>
+                        <select v-model="relatedId['related-'+agenda.id]" id="related_speech" class="form-control">
+                            <option v-for="agenda in agendaDialog['agenda-'+agenda.id]" v-bind:key="agenda.id" v-bind:value="agenda.id">{{agenda.description}}</option>
                         </select>
                     </div>
-                    <input type="hidden" v-model="dialogId['dialogId-'+projectTask.id]">
+                    <input type="hidden" v-model="dialogId['dialogId-'+agenda.id]">
                     <i class="pull-right">
-                    <button v-on:click="clearDialog(projectTask.id)" class="btn btn-sm btn-success">Clear</button>&nbsp;
-                    <button v-on:click="addDialog(projectTask.id)" class="btn btn-sm btn-primary">Save Action</button>
+                    <button v-on:click="clearDialog(agenda.id)" class="btn btn-sm btn-success">Clear</button>&nbsp;
+                    <button v-on:click="addDialog(agenda.id)" class="btn btn-sm btn-primary">Save Action</button>
                     </i>
                 </div>
             </div>
@@ -129,17 +129,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="dialog in agendaDialog['agenda-' + projectTask.id]" v-bind:key="dialog.id">
+                        <tr v-for="dialog in agendaDialog['agenda-' + agenda.id]" v-bind:key="dialog.id">
                             <td>{{dialog.speaker['name']}}</td>
                             <td>{{dialog.action['name']}}</td>
                             <td>{{dialog.description}}</td>
                             <td>{{dialog.related == null? '' : dialog.related.description}}</td>
                             <td>
                                 <div class="table-data-feature">
-                                    <button v-on:click="editAction(dialog.id, projectTask.id)" class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                    <button v-on:click="editAction(dialog.id, agenda.id)" class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
                                         <i class="zmdi zmdi-edit"></i>
                                     </button>
-                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete" @click="deleteDiscussionLog(dialog, projectTask.id)">
+                                    <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete" @click="deleteDiscussionLog(dialog, agenda.id)">
                                         <i class="zmdi zmdi-delete"></i>
                                     </button>
                                 </div>
@@ -156,7 +156,7 @@
 </div>
 
 <!-- modal large -->
-<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+<div class="modal fade" id="createAgendModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -171,24 +171,21 @@
                     <div class="col col-md-12">
 
                         <div class="form-group">
-                            <label for="task_name" class=" form-control-label">Task Name</label>
-                            <input type="text" id="task_name" v-model="task_name" name="task_name" placeholder="Enter task name" class="form-control">
+                            <label for="agendaName" class=" form-control-label">Task Name</label>
+                            <input type="text" id="agendaName" v-model="agendaName" name="agendaName" placeholder="Enter task name" class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <label for="frm_summary" class=" form-control-label">Agenda Summary</label>
-                            <textarea id="frm_summary" v-model="frm_summary" placeholder="Enter agenda summary" rows="3" class="form-control"></textarea>
+                            <label for="agendaDescription" class=" form-control-label">Agenda Summary</label>
+                            <textarea id="agendaDescription" v-model="agendaDescription" placeholder="Enter agenda summary" rows="3" class="form-control"></textarea>
                         </div>
-                        <input type="hidden" v-model="project_id">
                     </div>
                 </div>
 
                 <div class="row">
-
                     <div class="col col-lg-12">
                         <button v-on:click="createOrUpdateAgenda()" class="btn btn-sm btn-primary pull-right">Save</button>
                     </div>
-
                 </div>
 
 			</div>	
@@ -199,7 +196,7 @@
 
 <!-- Delete Agenda -->
 <div class="modal fade" id="deleteAgenda" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="largeModalLabel">Delete Confirmation</h5>
@@ -218,8 +215,7 @@
                 <div class="row">
 
                     <div class="col col-lg-12">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button v-on:click="deleteAgenda()" class="btn btn-sm btn-primary pull-right">OK</button>
+                        <button v-on:click="deleteAgenda()" class="btn btn-sm btn-danger pull-right">Delete</button>
                     </div>
 
                 </div>
@@ -236,10 +232,7 @@
 import Select2 from 'vue3-select2-component';
 import $ from 'jquery'
 import MeetingAgendaAPI from '../../services/MeetingAgendaService'
-//import MeetingAttachmentAPI from '../../services/MeetingAttachmentService'
-//import MeetingDiscussionLogAPI from '../../services/MeetingDiscussionLogService'
 import MeetingActionTypeAPI from '../../services/MeetingTypeService'
-//import MeetingParticipantAPI from '../../services/MeetingParticipantService'
 import UserAPI from '../../services/UserService'
 
 export default {
@@ -250,9 +243,12 @@ export default {
     data () {
         return {
             meeting_id : "",
+            meetingAgendas : [],
             meetingActionTypes : [],
+            agendaName : "", 
+            agendaDescription : "",
+            agenda_id : null,
             userData : [],
-            projectTasks : [],
             attachments : [
                 {
                     'id': 1,
@@ -336,66 +332,79 @@ export default {
         mySelectEvent({id, text}){
             console.log({id, text})
         },
-        callToDeleteAgenda(){
+        callAgendaFrom() {
+            this.agendaName = "";
+            this.agendaDescription = "";
+            this.agenda_id = null;
+            $("#createAgendModal").modal("show");
+        },
+        callAgendaFromUpdate(agenda_id) {
+           var self = this;
+           this.meetingAgendas.forEach(function(value){
+               if(agenda_id == value.id){
+                   self.agenda_id = value.id;
+                   self.agendaName = value.name;
+                   self.agendaDescription = value.description;
+               }
+           });
+           $("#createAgendModal").modal("show");
+        },
+        createOrUpdateAgenda() {
+            var self = this;
+            var data = {}
+            data['name'] = this.agendaName;
+            data['description'] = this.agendaDescription;
+            data['meeting'] = { "id" : this.meeting_id };
+            if(this.agenda_id == null){
+                MeetingAgendaAPI.createAgenda(this.meeting_id, data)
+                .then(response => {
+                    self.meetingAgendas.push(response);
+                    $("#createAgendModal").modal("hide");
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                MeetingAgendaAPI.updateAgenda(this.meeting_id, this.agenda_id, data)
+                .then(data => {
+                    var i = 0
+                    for (i; i < this.meetingAgendas.length; i++){
+                        if(this.meetingAgendas[i].id == data.id){
+                            this.meetingAgendas[i] = data;
+                            break;
+                        }
+                    }
+                    $("#createAgendModal").modal("hide");
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+        },
+        callToDeleteAgenda(agenda_id){
+            this.agenda_id = agenda_id;
             $("#deleteAgenda").modal('show');
         },
-        deleteAgenda(meeting_id, agenda_id) {
-            MeetingAgendaAPI.deleteAgenda(meeting_id, agenda_id)
+        deleteAgenda() {
+            var self = this;
+            console.log(this.agenda_id);
+            MeetingAgendaAPI.deleteAgenda(this.meeting_id, this.agenda_id)
             .then(data => {
-                console.log(data)
+                var oldData = {};
+                self.meetingAgendas.forEach(function(val){
+                    if(self.agenda_id == val.id){
+                        oldData = val;
+                    }
+                });
+                self.meetingAgendas.pop(oldData);
+                console.log(data);
+                $("#deleteAgenda").modal('hide');
+                self.agenda_id = null;
             })
             .catch(err => { 
                 console.log(err);
             });
-        },
-        newAgenda() {
-            this.project_id = "";
-            this.task_name = "";
-            this.project_id = "";
-        },
-        createOrUpdateAgenda() {
-            var self = this
-            if(this.project_id == ""){
-                if(this.task_name != "") {
-
-                    var data = {
-                        'id' : this.projectTasks.length+1,
-                        'name' : this.task_name,
-                        'meeting_id' : this.meeting_id,
-                        'description' : this.frm_summary
-                    }
-
-                    MeetingAgendaAPI.createAgenda(this.meeting_id ,data)
-                    .then(data => {
-                        self.projectTasks.push(data);
-                    })
-                    .catch( err => {
-                        console.log(err);
-                    });
-                    
-                    $('#largeModal').modal('hide');
-
-                }
-                else {
-                    console.log('insert!');
-                }
-            }
-            else {
-                if(this.task_name != "") {
-                    this.projectTasks.forEach(function(value){
-                        if (self.project_id == value.id){
-                            value.name = self.task_name;
-                            value.description = self.frm_summary;
-                            return 0;
-                        }
-                    });
-                    this.updateSummary();
-                    $('#largeModal').modal('hide');
-                }
-                else {
-                    console.log('update!')
-                }
-            }
         },
         addDialog(project_id) {
             var self = this;
@@ -436,19 +445,9 @@ export default {
                 });
             }
         },
-        editAgenda(project_id) {
-           var self = this;
-           this.projectTasks.forEach(function(value){
-               if(project_id == value.id){
-                   self.project_id      = value.id;
-                   self.task_name       = value.name;
-                   self.frm_summary     = value.description;
-               }
-           });
-        },
         updateSummary(){
             var self = this;
-            this.projectTasks.forEach(function(value){
+            this.meetingAgendas.forEach(function(value){
                 self.summary['summary-'+value.id] = value.description
             });
         },
@@ -494,11 +493,12 @@ export default {
                 console.log(err);
             });
         }, 
-        initialMeetingAgenda(meeting_id){
+        loadMeetingAgendas(meeting_id){
             var self = this;
             MeetingAgendaAPI.getAllAgendas(meeting_id)
             .then(data => {
-                self.projectTasks = data;
+                console.log(data);
+                self.meetingAgendas = data;
             })
             .catch(err => {
                 console.log(err);
@@ -506,15 +506,17 @@ export default {
         }
     },
     mounted() {
+        var urlPath = window.location.pathname.split('/')
+        this.meeting_id = urlPath[urlPath.length - 2];
+
+        this.loadMeetingAgendas(this.meeting_id);
+        console.log(this.meetingAgendas);
+
         this.initialUserData();
         this.initialMeetingActionType();
-        this.initialMeetingAgenda();
         this.updateSummary();
         
-        var urlPath = window.location.pathname.split('/')
-        if (urlPath[urlPath.length - 1] == 'edit'){
-            this.meeting_id = urlPath[urlPath.length - 2];
-        }
+      
     }
 }
 </script>

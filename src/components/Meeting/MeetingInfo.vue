@@ -1,5 +1,11 @@
 <template>
 <br>
+<div class="row">
+    <div class="col col-sm-12">
+        <button class="btn btn-sm btn-primary pull-right" v-on:click="updateMeetingInfo()">Update Info</button>
+    </div>
+</div>
+
                 <div class="row">
                     <div class="col col-md-6">
 
@@ -98,6 +104,7 @@
 <script>
 import MeetingTypeAPI from '../../services/MeetingTypeService'
 import ProjectAPI from '../../services/ProjectService'
+import MeetingAPI from '../../services/MeetingService'
 
 export default {
     name: 'MeetingInfo',
@@ -106,6 +113,7 @@ export default {
     },
     data () {
         return {
+            meeting_id      : "",
             meetingTypes    : [],
             projects        : [],
             topic           : '',
@@ -127,6 +135,50 @@ export default {
         }
     },
     methods: {
+        loadMeetingInfo() {
+            var urlPath = window.location.pathname.split('/');
+            this.meeting_id = urlPath[urlPath.length - 2];
+            MeetingAPI.getMeeting(this.meeting_id)
+            .then(data => {
+                this.topic = data.name;
+                this.meeting_type_id = data.type.id;
+                this.project_id = data.project.id;
+                this.issue_number = data.issue_number;
+                this.location = data.location;
+                this.meeting_status = data.status;
+                this.date = data.date;
+                this.summary = data.summary;
+                this.start_time = data.start_time;
+                this.end_time = data.end_time;
+                this.comment = data.comment;
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
+        updateMeetingInfo() {
+            var data = {};
+            data['id'] = this.meeting_id;
+            data['name'] = this.topic;
+            data['type'] = {"id" : this.meeting_type_id}
+            data['project'] = {"id" : this.project_id}
+            data["issue_number"] = this.issue_number;
+            data['location'] = this.location;
+            data['status'] = this.meeting_status;
+            data['date'] = this.date;
+            data['start_time'] = this.start_time;
+            data['end_time'] = this.end_time;
+            data['summary'] = this.summary;
+            data['comment'] = this.comment;
+        
+            MeetingAPI.updateMeeting(data, this.meeting_id)
+            .then(response => {
+                console.log(response);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
         initMeetingTypes() {
             MeetingTypeAPI.allMeetingTypes()
             .then(data => {
@@ -147,6 +199,7 @@ export default {
         }
     },
     mounted() {
+        this.loadMeetingInfo();
         this.initMeetingTypes();
         this.initProjects();
     }
