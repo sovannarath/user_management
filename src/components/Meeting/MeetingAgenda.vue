@@ -39,7 +39,7 @@
         <div class="card-body">
             
             <div class="form-group">
-                <label for="description" class=" form-control-label">Agenda Summary</label>
+                <label for="description" style="font-weight: bold;" class=" form-control-label">Agenda Summary</label>
                 <p>{{agenda.description}}</p>
             </div>
 
@@ -48,7 +48,7 @@
             <hr>
             <div class="form-group">
                 <label for="file-multiple-input" class=" form-control-label">Upload</label>
-                <input type="file" id="file-multiple-input" name="file-multiple-input" ref="myFiles" @change="agendaAttachment()" multiple="" class="form-control-file">
+                <input type="file" ref="myFiles" @change="agendaAttachment($event, agenda.id)" multiple="" class="form-control-file">
             </div>
 
             <div class="table-responsive table--no-card m-b-40">
@@ -56,21 +56,16 @@
                     <thead>
                         <tr>
                             <th>File Name</th>
-                            <th>Type</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="attachment in agenda.attachments" v-bind:key="attachment.id">
+                        <tr v-for="attachment in attachments['agenda-' + agenda.id]" v-bind:key="attachment.id">
                             <td>
-                                <a href="#">{{attachment.name}}</a>
+                                <a v-bind:href="attachment.domain_name+'/files/'+attachment.attachment_path">{{attachment.attachment_path}}</a>
                             </td>
-                            <td>{{attachment.type.name}}</td>
                             <td>
                                 <div class="table-data-feature">
-                                    <!--button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
-                                        <i class="zmdi zmdi-edit"></i>
-                                    </button-->
                                     <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete" @click="deleteAttacment(attachment)">
                                         <i class="zmdi zmdi-delete"></i>
                                     </button>
@@ -88,24 +83,24 @@
                 <div class="col col-sm-6">
                     <div class="form-group">
                         <label for="description" class=" form-control-label">Description</label>
-                        <textarea id="description" v-model="description['descript-'+agenda.id]" name="description" placeholder="Enter description" rows="8" class="form-control"></textarea>
+                        <textarea id="description" v-model="dialogDescription['des-'+agenda.id]" name="description" placeholder="Enter description" rows="8" class="form-control"></textarea>
                     </div>
                     
                 </div>
                 <div class="col col-sm-6">
                     <div class="form-group" style="margin-bottom:20px;">
-                        <label for="participant" class=" form-control-label">Participant</label>
-                        <Select2 v-model="speakerId['speaker-'+agenda.id]" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
+                        <label for="participant" class=" form-control-label">Speaker</label>
+                        <Select2 v-model="dialogSpeakerId['spk-'+ agenda.id]" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
                     </div>
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="action_type" class=" form-control-label">Type</label>
-                        <select v-model="action_type_id['action-'+agenda.id]" id="action_type" class="form-control">
+                        <select v-model="dialogActionType['act-'+agenda.id]" class="form-control">
                             <option v-for="meetingAction in meetingActionTypes" v-bind:key="meetingAction.id" v-bind:value="meetingAction.id">{{meetingAction.name}}</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="related_speech" class=" form-control-label">Related Speech</label>
-                        <select v-model="relatedId['related-'+agenda.id]" id="related_speech" class="form-control">
+                        <select v-model="dialogRelateSpeech['rel-'+agenda.id]" class="form-control">
                             <option v-for="agenda in agendaDialog['agenda-'+agenda.id]" v-bind:key="agenda.id" v-bind:value="agenda.id">{{agenda.description}}</option>
                         </select>
                     </div>
@@ -232,8 +227,9 @@
 import Select2 from 'vue3-select2-component';
 import $ from 'jquery'
 import MeetingAgendaAPI from '../../services/MeetingAgendaService'
-import MeetingActionTypeAPI from '../../services/MeetingTypeService'
+import MeetingActionTypeAPI from '../../services/MeetingActionTypeService'
 import UserAPI from '../../services/UserService'
+import MeetingAttachmentAPI from '../../services/MeetingAttachmentService'
 
 export default {
     name: 'ProjectTask',
@@ -244,34 +240,23 @@ export default {
         return {
             meeting_id : "",
             meetingAgendas : [],
-            meetingActionTypes : [],
+            meetingActionTypes : {},
             agendaName : "", 
             agendaDescription : "",
             agenda_id : null,
             userData : [],
-            attachments : [
-                {
-                    'id': 1,
-                    'name' : 'file_1.pptx',
-                    'type' : {
-                        'id': 1,
-                        'name' : 'Power Point'
-                    },
-                },
-                {
-                    'id' : 2,
-                    'name' : 'file_2.pdf',
-                    'type' : {
-                        'id' : 2,
-                        'name' : 'PDF'
-                    }
-                }
-            ],
+            attachments : [],
             task_name : "",
             userDataForSelect: [],
+            description : {},
+
+            dialogDescription : {},
+            dialogSpeakerId : {},
+            dialogActionType : {},
+            dialogRelateSpeech : {},
+
             action_type_id : {},
             relate_action_id : {},
-            description : {},
             summary : {
                 'summary-1' : ''
             },
@@ -307,24 +292,32 @@ export default {
             //console.log(dialog, agenda_id);
         },
         deleteAttacment(attachFile) {
-            //console.log(attachFile);
-            var indexOfFile = this.attachments.indexOf(attachFile);
-            //console.log(indexOfFile);
-            this.attachments.splice(indexOfFile, 1);
-        },
-        agendaAttachment(){
-            var self = this
-            this.$refs.myFiles.files.forEach(function(file){
-                var fileData = {};
-                fileData['id'] = self.attachments.length + 1;
-                fileData['name'] = file.name;
-                fileData['type'] = {
-                    'id' : file.type,
-                    'name' : file.type
-                }
-                self.attachments.push(fileData);
+            var self = this;
+            console.log(attachFile.agenda.id);
+            MeetingAttachmentAPI.deleteAttachment(attachFile.agenda.id, attachFile.id)
+            .then(data => {
+                console.log(data);
+                var indexOfFile = self.attachments['agenda-' + attachFile.agenda.id].indexOf(attachFile);
+                self.attachments['agenda-' + attachFile.agenda.id].splice(indexOfFile, 1);
+            })
+            .catch(err => {
+                console.log(err);
             });
-            this.$refs.myFiles.files = [];
+        },
+        agendaAttachment(event, agenda_id){
+            var self = this
+            event.target.files.forEach(function(file){
+                var formData = new FormData();
+                formData.append('file', file);
+                MeetingAttachmentAPI.createAttachment(agenda_id, formData)
+                .then(data => {
+                    self.attachments['agenda-' + agenda_id].push(data);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            });
+            
         },
         myChangeEvent(val){
             console.log(val);
@@ -406,44 +399,15 @@ export default {
                 console.log(err);
             });
         },
-        addDialog(project_id) {
-            var self = this;
+        addDialog(agenda_id) {
+            //var self = this;
             var data = {
-                'id' : this.agendaDialog['agenda-' + project_id].length+1,
-                'description' : this.description['descript-'+project_id]
+                "meeting" : {"id" : this.meeting_id},
+                "agenda" : {"id" : agenda_id},
+                "user" : {"id" : this.dialogSpeakerId['spk-' + agenda_id]},
+                "action" : {"id" : this.dialogActionType['act-' + agenda_id]}
             };
-
-            this.userData.forEach(function(value){
-                if (value.id == self.speakerId['speaker-'+project_id]){
-                    data['speaker'] = value;
-                }
-            });
-
-            this.meetingActionTypes.forEach(function(value){
-                if (value.id == self.action_type_id['action-'+project_id]) {
-                   data['action'] = value;
-                }
-            });
-
-            this.agendaDialog['agenda-'+project_id].forEach(function(value){
-                if(value.id == self.relatedId['related-'+project_id]){
-                    data['related'] = value;
-                 }
-            });
-
-            if ( (this.dialogId['dialogId-' + project_id] == undefined | this.dialogId['dialogId-' + project_id] == "") &&
-                (self.speakerId['speaker-'+project_id] != "" | self.action_type_id['action-'+project_id] != "" | this.description['descript-'+project_id] != "") ) {
-
-                this.dialogId['dialogId-' + project_id] = data.id;
-                this.agendaDialog['agenda-'+project_id].push(data);
-            }
-            else {
-                this.agendaDialog['agenda-'+project_id].forEach(function(value,idx){
-                    if(value.id == self.dialogId['dialogId-'+project_id]){
-                        self.agendaDialog['agenda-'+project_id][idx] = data;
-                    }
-                });
-            }
+            console.log(data);
         },
         updateSummary(){
             var self = this;
@@ -485,7 +449,7 @@ export default {
         },
         initialMeetingActionType() {
             var self = this;
-            MeetingActionTypeAPI.allMeetingTypes()
+            MeetingActionTypeAPI.allMeetingActionTypes()
             .then(data => {
                 self.meetingActionTypes = data;
             })
@@ -497,8 +461,10 @@ export default {
             var self = this;
             MeetingAgendaAPI.getAllAgendas(meeting_id)
             .then(data => {
-                console.log(data);
                 self.meetingAgendas = data;
+                self.meetingAgendas.forEach(function(value){
+                    self.attachments['agenda-' + value.id] = value.attachments;
+                });
             })
             .catch(err => {
                 console.log(err);
@@ -508,15 +474,10 @@ export default {
     mounted() {
         var urlPath = window.location.pathname.split('/')
         this.meeting_id = urlPath[urlPath.length - 2];
-
         this.loadMeetingAgendas(this.meeting_id);
-        console.log(this.meetingAgendas);
-
         this.initialUserData();
         this.initialMeetingActionType();
         this.updateSummary();
-        
-      
     }
 }
 </script>
