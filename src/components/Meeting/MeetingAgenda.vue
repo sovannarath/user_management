@@ -101,7 +101,7 @@
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="related_speech" class=" form-control-label">Related Speech</label>
                         <select v-model="dialogRelateSpeech['rel-'+agenda.id]" class="form-control">
-                            <option v-for="agenda in agendaDialog['agenda-'+agenda.id]" v-bind:key="agenda.id" v-bind:value="agenda.id">{{agenda.description}}</option>
+                            <option v-for="dialog in agendaDialog['agenda-' + agenda.id]" v-bind:key="dialog.id" v-bind:value="dialog.id">{{dialog.description}}</option>
                         </select>
                     </div>
                     <input type="hidden" v-model="dialogId['dialogId-'+agenda.id]">
@@ -125,10 +125,10 @@
                     </thead>
                     <tbody>
                         <tr v-for="dialog in agendaDialog['agenda-' + agenda.id]" v-bind:key="dialog.id">
-                            <td>{{dialog.speaker['name']}}</td>
-                            <td>{{dialog.action['name']}}</td>
+                            <td>{{dialog.user.name}}</td>
+                            <td>{{dialog.action_type.name}}</td>
                             <td>{{dialog.description}}</td>
-                            <td>{{dialog.related == null? '' : dialog.related.description}}</td>
+                            <td>{{dialog.related_action == null? '' : dialog.related_action.description}}</td>
                             <td>
                                 <div class="table-data-feature">
                                     <button v-on:click="editAction(dialog.id, agenda.id)" class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
@@ -226,10 +226,11 @@
 <script>
 import Select2 from 'vue3-select2-component';
 import $ from 'jquery'
-import MeetingAgendaAPI from '../../services/MeetingAgendaService'
+import MeetingDiscussionLogAPI from '../../services/MeetingDiscussionLogService'
 import MeetingActionTypeAPI from '../../services/MeetingActionTypeService'
 import UserAPI from '../../services/UserService'
 import MeetingAttachmentAPI from '../../services/MeetingAttachmentService'
+import MeetingAgendaAPI from '../../services/MeetingAgendaService'
 
 export default {
     name: 'ProjectTask',
@@ -250,6 +251,7 @@ export default {
             userDataForSelect: [],
             description : {},
 
+            agendaDialog : {},
             dialogDescription : {},
             dialogSpeakerId : {},
             dialogActionType : {},
@@ -259,23 +261,6 @@ export default {
             relate_action_id : {},
             summary : {
                 'summary-1' : ''
-            },
-            agendaDialog : {
-                'agenda-1' : [
-                    {
-                        'id' : 1,
-                        'speaker' : {
-                            'id' : 1,
-                            'name': 'Thorn Sovannarath',
-                        },
-                        'action' : {
-                            'id' : 1,
-                            'name' : 'ASK QUESTION',
-                        },
-                        'description' : 'What does the POI mean?',
-                        'related' : null
-                    }
-                ]
             },
             project_id : "",
             frm_summary : "",
@@ -405,9 +390,27 @@ export default {
                 "meeting" : {"id" : this.meeting_id},
                 "agenda" : {"id" : agenda_id},
                 "user" : {"id" : this.dialogSpeakerId['spk-' + agenda_id]},
-                "action" : {"id" : this.dialogActionType['act-' + agenda_id]}
+                "action_type" : {"id" : this.dialogActionType['act-' + agenda_id]},
+                "description" : this.dialogDescription['des-'+agenda_id]
             };
+            if(this.dialogRelateSpeech['rel-'+agenda_id] != undefined ) {
+                data['related_action'] = {"id" : this.dialogRelateSpeech['rel-'+agenda_id]}
+            }
             console.log(data);
+            
+            MeetingDiscussionLogAPI.createDiscussion(data)
+            .then(data => {
+                self.agendaDialog['agenda-'+ agenda_id].push(data);   
+
+                self.dialogSpeakerId['spk-' + agenda_id] = "";
+                self.dialogActionType['act-' + agenda_id] = "";
+                self.dialogRelateSpeech['rel-'+ agenda_id] = "";
+                self.dialogDescription['des-'+ agenda_id] = "";
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        
         },
         updateSummary(){
             var self = this;
@@ -461,10 +464,13 @@ export default {
             var self = this;
             MeetingAgendaAPI.getAllAgendas(meeting_id)
             .then(data => {
+                console.log(data);
                 self.meetingAgendas = data;
                 self.meetingAgendas.forEach(function(value){
                     self.attachments['agenda-' + value.id] = value.attachments;
+                    self.agendaDialog['agenda-' + value.id] = value.discussions;
                 });
+                console.log(self.agendaDialog);
             })
             .catch(err => {
                 console.log(err);
