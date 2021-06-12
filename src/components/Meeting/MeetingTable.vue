@@ -11,27 +11,6 @@
   <button class="btn btn-sm btn-primary pull-right" style="margin-right:35px;" v-on:click="callCreateMeeting()">
       <i class="fa fa-plus"></i> New Meeting
   </button>
-  <!--router-link style="margin-right:35px;" class="btn btn-sm btn-primary pull-right" to="/meetings/create">
-    <i class="fa fa-plus"></i> New Record
-  </router-link!-->
-    <!--div class="filters m-b-45">
-        <div class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
-            <select class="js-select2" name="property">
-                <option selected="selected">All Properties</option>
-                <option value="">Products</option>
-                <option value="">Services</option>
-            </select>
-            <div class="dropDownSelect2"></div>
-        </div>
-        <div class="rs-select2--dark rs-select2--sm rs-select2--border">
-            <select class="js-select2 au-select-dark" name="time">
-                <option selected="selected">All Time</option>
-                <option value="">By Month</option>
-                <option value="">By Day</option>
-            </select>
-            <div class="dropDownSelect2"></div>
-        </div>
-    </div-->
 
     <div class="table-responsive table-data">
         <table class="table">
@@ -199,14 +178,15 @@ export default {
             var self = this;
             MeetingAPI.allMeetings()
             .then(response => {
-                for (var i = 0; i <= (response.length - 1); i++) {
+                self.meetings = response;
+                /*for (var i = 0; i <= (response.length - 1); i++) {
                     var date = new Date(response[i].date);
                     var strDate = date.getFullYear() + '-';
                     if( (date.getMonth()+1) < 10)
                         strDate += '0'
                     response[i].date = strDate + (date.getMonth()+1) + '-' + date.getDate()
                     self.meetings.push(response[i]);
-                }
+                }*/
             })
             .catch(err => {
                 console.log(err)
