@@ -273,8 +273,16 @@ export default {
     methods: {
         deleteDiscussionLog(dialog, agenda_id) {
             var indexOfDialog = this.agendaDialog['agenda-' + agenda_id].indexOf(dialog);
-            this.agendaDialog['agenda-' + agenda_id].splice(indexOfDialog, 1);
-            //console.log(dialog, agenda_id);
+            var self = this;
+            MeetingDiscussionLogAPI.deleteDiscussion(dialog.id)
+            .then(res => {
+                if(res){
+                    self.agendaDialog['agenda-' + agenda_id].splice(indexOfDialog, 1);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
         },
         deleteAttacment(attachFile) {
             var self = this;
@@ -385,10 +393,11 @@ export default {
             });
         },
         addDialog(agenda_id) {
+            console.log(this.dialogId);
             var self = this;
             var actionName ;
             var speakerName;
-            var relatedSpeech; 
+            var relatedSpeech;
             this.meetingActionTypes.forEach(function(value){
                 if(value.id == self.dialogActionType['act-' + agenda_id]){
                     actionName = value.name;
@@ -414,23 +423,42 @@ export default {
             if(this.dialogRelateSpeech['rel-'+agenda_id] != undefined ) {
                 data['related_action'] = {"id" : this.dialogRelateSpeech['rel-'+agenda_id]}
             }
-            
-            MeetingDiscussionLogAPI.createDiscussion(data)
-            .then(data => {
-                data.user.name = speakerName;
-                data.action_type.name = actionName;
-                data.related_action.description = relatedSpeech;
-                self.agendaDialog['agenda-'+ agenda_id].push(data);   
+            if(this.dialogId == ""){
+                MeetingDiscussionLogAPI.createDiscussion(data)
+                .then(data => {
+                    data.user.name = speakerName;
+                    data.action_type.name = actionName;
+                    data.related_action.description = relatedSpeech;
+                    self.agendaDialog['agenda-'+ agenda_id].push(data);
 
-                self.dialogSpeakerId['spk-' + agenda_id] = "";
-                self.dialogActionType['act-' + agenda_id] = "";
-                self.dialogRelateSpeech['rel-'+ agenda_id] = "";
-                self.dialogDescription['des-'+ agenda_id] = "";
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        
+                    self.dialogSpeakerId['spk-' + agenda_id] = "";
+                    self.dialogActionType['act-' + agenda_id] = "";
+                    self.dialogRelateSpeech['rel-'+ agenda_id] = "";
+                    self.dialogDescription['des-'+ agenda_id] = "";
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                MeetingDiscussionLogAPI.updateDiscussion(data, this.dialogId)
+                .then(res => {
+                    self.agendaDialog['agenda-' + agenda_id].forEach(function(action){
+                        if(res.id == action.id){
+                            action.description = res.description;
+                        }
+                    });
+
+                    self.dialogSpeakerId['spk-' + agenda_id] = "";
+                    self.dialogActionType['act-' + agenda_id] = "";
+                    self.dialogRelateSpeech['rel-'+ agenda_id] = "";
+                    self.dialogDescription['des-'+ agenda_id] = "";
+                    self.dialogId = "";
+                })
+                .catch(err => { 
+                    console.log(err);
+                });
+            }
         },
         updateSummary(){
             var self = this;
@@ -448,9 +476,11 @@ export default {
             this.dialogSpeakerId['spk-' + agenda_id] = actionRecord.user.id;
             this.dialogActionType['act-' + agenda_id] = actionRecord.action_type.id;
             this.dialogDescription['des-'+ agenda_id] = actionRecord.description; 
-            if (actionRecord.related_action.id) {
-                this.dialogRelateSpeech['rel-'+ agenda_id] = actionRecord.related_action.id;
-            }
+            this.dialogRelateSpeech['rel-'+ agenda_id] = actionRecord.related_action == null? "" : actionRecord.related_action.id;
+            
+            this.dialogId = dialog_id;
+            console.log(agenda_id);
+            console.log(this.dialogId);
         },
         clearDialog(agenda_id) {
            this.description['descript-' + agenda_id]   = "";

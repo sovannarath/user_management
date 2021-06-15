@@ -34,9 +34,9 @@
                                 <td>{{participant.phone}}</td>
                                 <td>
                                     <div class="table-data-feature">
-                                        <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <!--button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
                                             <i class="zmdi zmdi-edit"></i>
-                                        </button>
+                                        </button!-->
                                         <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
                                             <i class="zmdi zmdi-delete"></i>
                                         </button>
@@ -222,14 +222,18 @@ export default {
             console.log('alsdkjf;la',text,'lakjsdf;lakjsd');
             if(participantGroup == undefined){
                 this.userData.forEach(function(user){
-                    if(user.id == id){
+                    var idxOfUser = self.participants.indexOf(user);
+                    if(user.id == id && idxOfUser == -1){
                         self.participants.push(user);
                     }
                 });
             }
             else {
                 participantGroup.forEach(function(g_user){
-                    self.participants.push(g_user);
+                    var userIdx = self.participants.indexOf(g_user);
+                    if(userIdx == -1){
+                        self.participants.push(g_user);
+                    }
                 });
             }
         },
@@ -357,6 +361,7 @@ export default {
             var self = this;
             UserAPI.user_list()
             .then(data => {
+                console.log("User", data);
                 self.userData = data;
                 data.forEach(function(user){
                     self.userDataForSelect.push({'id': user.id, 'text': user.name});
@@ -370,9 +375,9 @@ export default {
             var self = this;
             ParticipantGroupAPI.getAllParticipantGroups()
             .then(data => {
-                console.log(data);
+                console.log("group", data);
                 data.forEach(function(group){
-                    self.userDataForSelect.push({'id' : group.id, 'text' : group.name});
+                    self.userDataForSelect.push({'id' : group.name, 'text' : group.name});
                     var glist = {
                         'id': group.id,
                         'text' : group.name,
