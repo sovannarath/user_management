@@ -37,9 +37,9 @@ export default {
         });
     },
     
-    getParticipant(meeting_id,user_id) {
+    getParticipant(meeting_id,id) {
         return new Promise((resolve, reject) => {
-            axios.get("/meeting/" + meeting_id + "/participants/" + user_id, this.httpHeader)
+            axios.get("/meeting/" + meeting_id + "/participants/" + id, this.httpHeader)
             .then(response => {
                 resolve(response.data)
             })
@@ -51,7 +51,7 @@ export default {
     
     createParticipant(meeting_id, data) {
         return new Promise((resolve, reject) => {
-            axios.post("/meeting/" + meeting_id + "/participants/", data, this.httpHeader())
+            axios.post("/meeting/" + meeting_id + "/participants", data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -61,9 +61,9 @@ export default {
         });
     },
     
-    updateParticipant(meeting_id, user_id, data) {
+    updateParticipant(meeting_id, id, data) {
         return new Promise((resolve, reject) => {
-            axios.put("/meeting/" + meeting_id + "/participants/" + user_id, data, this.httpHeader())
+            axios.put("/meeting/" + meeting_id + "/participants/" + id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -73,9 +73,9 @@ export default {
         });
     },
     
-    deleteParticipant(meeting_id, user_id) {
+    deleteParticipant(meeting_id, id) {
         return new Promise((resolve, reject) => {
-            axios.delete("/meeting/" + meeting_id + "/participants/" + user_id, this.httpHeader())
+            axios.delete("/meeting/" + meeting_id + "/participants/" + id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })

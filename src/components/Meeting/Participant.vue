@@ -27,17 +27,20 @@
                         </thead>
                         <tbody>
                             <tr v-for="participant in participants" v-bind:key="participant.id">
-                                <td>{{participant.name}}</td>
-                                <td>{{participant.role.name}}</td>
-                                <td>{{participant.organization.name}}</td>
-                                <td>{{participant.email}}</td>
-                                <td>{{participant.phone}}</td>
+                                <td>{{participant.user.name}}</td>
+                                <td>{{participant.user.role.name}}</td>
+                                <td>{{participant.user.organization.name}}</td>
+                                <td>{{participant.user.email}}</td>
+                                <td>
+                                    <span v-for="contact in participant.user.contacts" v-bind:key="contact.id">
+                                        <p v-if="contact.type.name == 'PHONE_NUMBER'">
+                                            {{contact.contact}}
+                                        </p>
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="table-data-feature">
-                                        <!--button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
-                                            <i class="zmdi zmdi-edit"></i>
-                                        </button!-->
-                                        <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <button class="item tmp-btn-del" data-toggle="tooltip" data-placement="top" v-on:click="deleteParticipant(participant)" title="Delete">
                                             <i class="zmdi zmdi-delete"></i>
                                         </button>
                                     </div>
@@ -100,13 +103,7 @@
                                 <option v-for="userG in userGroupSearch" v-bind:key="userG.id" v-bind:value="userG.id">{{userG.name}}</option>
                             </select>
                         </div>
-
-                        <!--div class="form-group">
-                            <select id="group-participant" name="group-participant" multiple="" class="form-control" size="10">
-                                <option v-for="part_selected in userDataSelected" v-bind:key="part_selected.id" v-bind:value="part_selected.id">{{part_selected.name}}</option>
-                            </select>
-                        </div-->
-
+                        
                         <div class="table-responsive" style="height:200px; margin-bottom:30px;">
                             <table class="table table-striped">
                                 <thead>
@@ -173,6 +170,7 @@
 import Select2 from 'vue3-select2-component';
 import UserAPI from '../../services/UserService'
 import ParticipantGroupAPI from '../../services/MeetingParticipantGroupService'
+import MeetingParticipantAPI from '../../services/MeetingParticipantService'
 import $ from 'jquery'
 //import GroupParticipant from 'vue3-select2-component';
 
@@ -209,33 +207,63 @@ export default {
             search_participant : "",
             userGroupSearch: [],
             userDataSelected: [],
-            userData : []
+            userData : [],
+            meeting_id : null,
         }
     },
     methods: {
         myChangeEvent(val){
             console.log(val)
-            console.log("Changed!");
         },
-        mySelectEvent({id, text, participantGroup}){
+        mySelectEvent({id, /*text,*/ participantGroup}){
             var self = this;
-            console.log('alsdkjf;la',text,'lakjsdf;lakjsd');
+            var dataPart = {"meeting" : {"id" : this.meeting_id}};
             if(participantGroup == undefined){
                 this.userData.forEach(function(user){
                     var idxOfUser = self.participants.indexOf(user);
                     if(user.id == id && idxOfUser == -1){
-                        self.participants.push(user);
+                        dataPart["user"] = { "id" : user.id };
+                        MeetingParticipantAPI.createParticipant(self.meeting_id, dataPart)
+                        .then(data => {
+                            data.user = user
+                            self.participants.push(data);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                     }
                 });
             }
             else {
                 participantGroup.forEach(function(g_user){
-                    var userIdx = self.participants.indexOf(g_user);
+                    var userIdx = self.participants.indexOf(self.meeting_id, g_user);
                     if(userIdx == -1){
-                        self.participants.push(g_user);
+                        dataPart["user"] = { "id" : g_user.id };
+                        MeetingParticipantAPI.createParticipant(dataPart)
+                        .then(data => {
+                            data.user = g_user;
+                            self.participants.push(data);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                        
                     }
                 });
             }
+        },
+        deleteParticipant(participant) {
+            var self = this;
+            MeetingParticipantAPI.deleteParticipant(this.meeting_id, participant.id)
+            .then(data => {
+                if ( data == true ) {
+                    var participantIdx = self.participants.indexOf(participant);
+                    self.participants.splice(participantIdx, 1);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
         },
         searchParticipants() {
             if(this.searchParticipant != ""){
@@ -284,6 +312,7 @@ export default {
             }
         },
         searchSelect(value) {
+            console.log(value);
             var self = this;
             var selected = false;
             this.userDataSelected.forEach(function(user){
@@ -291,7 +320,7 @@ export default {
                     selected = true
                 }
             });
-            
+            console.log(selected);
             if(!selected) {
                 this.userData.forEach(function(user){
                     if(value[0] == user.id) {
@@ -302,6 +331,7 @@ export default {
             else {
                 alert("User has been selected!");
             }
+            //participantGroupList
         },
         groupSelect({id, text}) {
             console.log(id,text)
@@ -343,11 +373,8 @@ export default {
                     Par_group = group
                 }
             });
-            
-
+        
             if(Par_group != undefined) {
-                //console.log("Oh", Par_group, "Hi");
-                //console.log(Par_group['participantGroup'].indexOf(participantObj));
                 indexOfParticipant = Par_group['participantGroup'].indexOf(participantObj);
                 Par_group['participantGroup'].splice(indexOfParticipant, 1);
             }
@@ -361,7 +388,6 @@ export default {
             var self = this;
             UserAPI.user_list()
             .then(data => {
-                console.log("User", data);
                 self.userData = data;
                 data.forEach(function(user){
                     self.userDataForSelect.push({'id': user.id, 'text': user.name});
@@ -375,7 +401,6 @@ export default {
             var self = this;
             ParticipantGroupAPI.getAllParticipantGroups()
             .then(data => {
-                console.log("group", data);
                 data.forEach(function(group){
                     self.userDataForSelect.push({'id' : group.name, 'text' : group.name});
                     var glist = {
@@ -389,11 +414,24 @@ export default {
             .catch(err => {
                 console.log(err);
             });
+        },
+        initialParticipants() {
+            var self = this;
+            MeetingParticipantAPI.getAllParticipants(this.meeting_id)
+            .then(data => {
+                self.participants = data;
+            })
+            .catch(err => {
+                console.log(err);
+            })
         }
     },
     mounted() {
+        var urlPath = window.location.pathname.split('/')
+        this.meeting_id = urlPath[urlPath.length - 2];
         this.initialUserData();
         this.initialGroupUser();
+        this.initialParticipants();
     }
 }
 </script>
