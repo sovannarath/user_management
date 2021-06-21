@@ -27,10 +27,10 @@
                         </thead>
                         <tbody>
                             <tr v-for="participant in participants" v-bind:key="participant.id">
-                                <td>{{participant.user.name}}</td>
-                                <td>{{participant.user.role.name}}</td>
-                                <td>{{participant.user.organization.name}}</td>
-                                <td>{{participant.user.email}}</td>
+                                <td>{{participant.name}}</td>
+                                <td>{{participant.role.name}}</td>
+                                <td>{{participant.organization.name}}</td>
+                                <td>{{participant.email}}</td>
                                 <td>
                                     <span v-for="contact in participant.user.contacts" v-bind:key="contact.id">
                                         <p v-if="contact.type.name == 'PHONE_NUMBER'">
@@ -171,8 +171,8 @@ import Select2 from 'vue3-select2-component';
 import UserAPI from '../../services/UserService'
 import ParticipantGroupAPI from '../../services/MeetingParticipantGroupService'
 import MeetingParticipantAPI from '../../services/MeetingParticipantService'
+import MeetingGroupUserAPI from '../../services/MeetingGroupUserService'
 import $ from 'jquery'
-//import GroupParticipant from 'vue3-select2-component';
 
 export default {
     name: 'Participant',
@@ -181,22 +181,7 @@ export default {
     },
     data () {
         return {
-            participantGroupList : [
-                /*{
-                    'id': "My Group Secretary",
-                    'text' : "My Group Secretary",
-                    'participantGroup' : [
-                        {id: 2, name: "Duy Panharith", occupy: "Director", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
-                        {id: 4, name: "Heng Sophat", occupy: "Coordinator", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
-                        {id: 1, name: "Thorn Sovannarath", occupy: "Developer", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
-                        {id: 5, name: "Heng Siyouer", occupy: "Admin", organization: "Secretary", email: "blabla@email.com",'phone' : '+855'},
-                        {id: 8, name: "Say Sopheak", occupy: "Secreterist", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
-                        {id: 9, name: "Morn Sopheaktra", occupy: "Secreterist", organization: "Secretary", email: "blabla@email.com", 'phone' : '+855'},
-                        {id: 10, name: "Top Sophea", occupy: "Secreterist", organization: "Secretary", email: "blabla@email.com",'phone' : '+855'},
-                        {id: 11, name: "Meng Sokeang", occupy: "Secreterist", organization: "Secretary", email: "blabla@emaiselectl.com",'phone' : '+855'},
-                    ]
-                }*/
-            ],
+            participantGroupList : [],
             groupName : '',
             s_g_part : null,
             searchParticipant       : '',
@@ -215,7 +200,7 @@ export default {
         myChangeEvent(val){
             console.log(val)
         },
-        mySelectEvent({id, /*text,*/ participantGroup}){
+        mySelectEvent({id, participantGroup}){
             var self = this;
             var dataPart = {"meeting" : {"id" : this.meeting_id}};
             if(participantGroup == undefined){
@@ -226,7 +211,7 @@ export default {
                         MeetingParticipantAPI.createParticipant(self.meeting_id, dataPart)
                         .then(data => {
                             data.user = user
-                            self.participants.push(data);
+                            self.participants.push(data.user);
                         })
                         .catch(err => {
                             console.log(err);
@@ -236,13 +221,15 @@ export default {
             }
             else {
                 participantGroup.forEach(function(g_user){
-                    var userIdx = self.participants.indexOf(self.meeting_id, g_user);
+                    console.log(g_user);
+                    console.log(self.participants);
+                    var userIdx = self.participants.indexOf(g_user.user);
                     if(userIdx == -1){
-                        dataPart["user"] = { "id" : g_user.id };
-                        MeetingParticipantAPI.createParticipant(dataPart)
+                        dataPart["user"] = { "id" : g_user.user.id };
+                        MeetingParticipantAPI.createParticipant(self.meeting_id, dataPart)
                         .then(data => {
-                            data.user = g_user;
-                            self.participants.push(data);
+                            data.user = g_user.user;
+                            self.participants.push(data.user);
                         })
                         .catch(err => {
                             console.log(err);
@@ -344,15 +331,35 @@ export default {
             $('#participant-group').modal("show");
         },
         saveParticipantGroup() {
+            console.log("Here!");
             var data = {};
-            data['id'] = this.groupName;
-            data['text'] = this.groupName;
-            data['participantGroup'] = [];
-            this.userDataSelected.forEach(function(user){
-                data['participantGroup'].push(user);
+            data['name'] = this.groupName;
+            ParticipantGroupAPI.createParticipantGroup(data)
+            .then(response => {
+                var dataTmp = {};
+                dataTmp['id'] = response.name;
+                dataTmp['text'] = response.name;
+                dataTmp['participantGroup'] = [];
+                this.userDataSelected.forEach(function(user){
+                    var userGroup = {};
+                    userGroup['user'] = {"id" : user.id};
+                    userGroup['pGroup'] = { "id" : response.id};
+                    MeetingGroupUserAPI.createGroupUser(response.id, userGroup)
+                    .then( userGroupResponse => {
+                        user.id = userGroupResponse.user_id;
+                        dataTmp['participantGroup'].push(user);
+                    })
+                    .catch( uGErr => {
+                        console.log(uGErr);
+                    });
+                    
+                });
+                this.userDataForSelect.push(dataTmp);
+                this.participantGroupList.push(dataTmp);
+            })
+            .catch(err => {
+                console.log(err);
             });
-            this.userDataForSelect.push(data);
-            this.participantGroupList.push(data);
             //$('#participant-group').modal("hide");
         },
         editParticipantGroup(group) {
@@ -361,8 +368,17 @@ export default {
             this.userDataSelected = group.participantGroup;
         },
         deleteParticipantGroup(group) {
-            var indexOfParticipant = this.participantGroupList.indexOf(group);
-            this.participantGroupList.splice(indexOfParticipant, 1);
+            var self = this;
+            ParticipantGroupAPI.deleteParticipantGroup(group.group_id)
+            .then ( data => {
+                if ( data == true) {
+                    var indexOfParticipant = this.participantGroupList.indexOf(group);
+                    self.participantGroupList.splice(indexOfParticipant, 1);
+                }
+            })
+            .catch( err => {
+                console.log(err);
+            });
         },
         deleteParticipantFromGroup(participantObj) {
             var self = this;
@@ -402,11 +418,12 @@ export default {
             ParticipantGroupAPI.getAllParticipantGroups()
             .then(data => {
                 data.forEach(function(group){
-                    self.userDataForSelect.push({'id' : group.name, 'text' : group.name});
+                    self.userDataForSelect.push({'id' : group.name, 'text' : group.name, 'participantGroup' : group.participants, 'group_id' : group.id});
                     var glist = {
-                        'id': group.id,
+                        'id': group.name,
                         'text' : group.name,
-                        'participantGroup' : group.participants
+                        'participantGroup' : group.participants,
+                        'group_id' : group.id
                     };
                     self.participantGroupList.push(glist);
                 });
@@ -419,7 +436,8 @@ export default {
             var self = this;
             MeetingParticipantAPI.getAllParticipants(this.meeting_id)
             .then(data => {
-                self.participants = data;
+                console.log(data);
+                self.participants = data.user;
             })
             .catch(err => {
                 console.log(err);

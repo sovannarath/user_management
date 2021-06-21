@@ -73,7 +73,7 @@ export default {
     
     deleteParticipantGroup(group_id) {
         return new Promise((resolve, reject) => {
-            axios.delete('/meeting-participant-groups' + group_id, this.httpHeader())
+            axios.delete('/meeting-participant-groups/' + group_id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
