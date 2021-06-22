@@ -3,7 +3,7 @@
             <div class="row form-group">
                     <div class="col col-md-6">
                         <label for="participant" class=" form-control-label">Search</label>
-                        <Select2 v-model="participantId" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
+                        <Select2 v-model="participantId" :options="userDataForSelect" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="" class=" form-control-label">&nbsp;</label><br>
@@ -27,10 +27,10 @@
                         </thead>
                         <tbody>
                             <tr v-for="participant in participants" v-bind:key="participant.id">
-                                <td>{{participant.name}}</td>
-                                <td>{{participant.role.name}}</td>
-                                <td>{{participant.organization.name}}</td>
-                                <td>{{participant.email}}</td>
+                                <td>{{participant.user.name}}</td>
+                                <td>{{participant.user.role.name}}</td>
+                                <td>{{participant.user.organization.name}}</td>
+                                <td>{{participant.user.email}}</td>
                                 <td>
                                     <span v-for="contact in participant.user.contacts" v-bind:key="contact.id">
                                         <p v-if="contact.type.name == 'PHONE_NUMBER'">
@@ -130,35 +130,6 @@
                         <button class="btn btn-sm btn-warning pull-right" style="margin:2px;" @click="clearSelectGroup()">Clear</button>
                     </div>
                 </div>
-                <!--p>Select Participant</p>
-                <hr>
-                <div class="row">
-                    <div class="col col-md-5">
-                        
-                    </div>
-                    <div class="col col-md-2 text-center">
-                        <div class="row">
-                            <div class="col col-sm-12">
-                                <button class="btn btn-sm btn-light">
-                                    <i class="fa fa-reply"></i>
-                                </button>
-                            </div>&nbsp;
-                            <div class="col col-sm-12">
-                                <button class="btn btn-sm btn-light">
-                                    <i class="fa fa-share"></i>
-                                </button>
-                            </div>   
-                        </div>
-                    </div>
-                    <div class="col col-md-5">
-                       
-                    </div>
-                </div-->
-                <!--div class="row">
-                    <div class="col col-lg-12">
-                        <button class="btn btn-sm btn-primary pull-right" @click="saveParticipantGroup()">Save</button>
-                    </div>
-                </div-->
 			</div>	
 		</div>
 	</div>
@@ -192,7 +163,7 @@ export default {
             search_participant : "",
             userGroupSearch: [],
             userDataSelected: [],
-            userData : [],
+            userData : {},
             meeting_id : null,
         }
     },
@@ -203,39 +174,44 @@ export default {
         mySelectEvent({id, participantGroup}){
             var self = this;
             var dataPart = {"meeting" : {"id" : this.meeting_id}};
+            var is_user_exist = false;
             if(participantGroup == undefined){
-                this.userData.forEach(function(user){
-                    var idxOfUser = self.participants.indexOf(user);
-                    if(user.id == id && idxOfUser == -1){
-                        dataPart["user"] = { "id" : user.id };
-                        MeetingParticipantAPI.createParticipant(self.meeting_id, dataPart)
-                        .then(data => {
-                            data.user = user
-                            self.participants.push(data.user);
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                dataPart["user"] = { "id" : id};
+                this.participants.forEach(function(pData){
+                    if(pData.user.id == id){
+                        is_user_exist = true;
                     }
                 });
+                if(!is_user_exist) {
+                    MeetingParticipantAPI.createParticipant(self.meeting_id, dataPart)
+                    .then(data => {
+                        data.user = self.userData[id]
+                        self.participants.push(data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                }
             }
             else {
                 participantGroup.forEach(function(g_user){
-                    console.log(g_user);
-                    console.log(self.participants);
-                    var userIdx = self.participants.indexOf(g_user.user);
-                    if(userIdx == -1){
-                        dataPart["user"] = { "id" : g_user.user.id };
+                    dataPart["user"] = { "id" : g_user.user.id };
+                    self.participants.forEach(function(pData){
+                        if(pData.user.id == g_user.user.id){
+                            is_user_exist = true;
+                        }
+                    });
+                     
+                    if(!is_user_exist) {
                         MeetingParticipantAPI.createParticipant(self.meeting_id, dataPart)
                         .then(data => {
                             data.user = g_user.user;
-                            self.participants.push(data.user);
+                            self.participants.push(data);
                         })
                         .catch(err => {
                             console.log(err);
                         });
-                        
-                    }
+                    }   
                 });
             }
         },
@@ -284,13 +260,12 @@ export default {
                 let scope = this;
                 scope.userGroupSearch = [];
                 var str = scope.search_participant.toLowerCase();
-                this.userData.forEach(function(value, key){
-                    var name = value.name.toLowerCase();
+
+                var userIds = Object.keys(this.userData);
+                userIds.forEach((key) => {
+                    var name = this.userData[key].name.toLowerCase();
                     if(name.includes(str)){
-                        scope.userGroupSearch.push(value)
-                    }
-                    if(key){
-                        console.log('')
+                        scope.userGroupSearch.push(this.userData[key])
                     }
                 });
             }
@@ -299,21 +274,17 @@ export default {
             }
         },
         searchSelect(value) {
-            console.log(value);
             var self = this;
             var selected = false;
+            
             this.userDataSelected.forEach(function(user){
                 if(user.id == value[0]){
                     selected = true
                 }
             });
-            console.log(selected);
+
             if(!selected) {
-                this.userData.forEach(function(user){
-                    if(value[0] == user.id) {
-                        self.userDataSelected.push(user)
-                    }
-                });
+                self.userDataSelected.push(this.userData[value[0]]);
             }
             else {
                 alert("User has been selected!");
@@ -331,7 +302,6 @@ export default {
             $('#participant-group').modal("show");
         },
         saveParticipantGroup() {
-            console.log("Here!");
             var data = {};
             data['name'] = this.groupName;
             ParticipantGroupAPI.createParticipantGroup(data)
@@ -340,14 +310,15 @@ export default {
                 dataTmp['id'] = response.name;
                 dataTmp['text'] = response.name;
                 dataTmp['participantGroup'] = [];
+                dataTmp['group_id'] = response.id;
                 this.userDataSelected.forEach(function(user){
                     var userGroup = {};
                     userGroup['user'] = {"id" : user.id};
                     userGroup['pGroup'] = { "id" : response.id};
-                    MeetingGroupUserAPI.createGroupUser(response.id, userGroup)
+                    MeetingGroupUserAPI.createGroupUser(userGroup)
                     .then( userGroupResponse => {
-                        user.id = userGroupResponse.user_id;
-                        dataTmp['participantGroup'].push(user);
+                        userGroupResponse.user = user;
+                        dataTmp['participantGroup'].push(userGroupResponse);
                     })
                     .catch( uGErr => {
                         console.log(uGErr);
@@ -363,17 +334,25 @@ export default {
             //$('#participant-group').modal("hide");
         },
         editParticipantGroup(group) {
+            var self = this;
+            self.userDataSelected = [];
             this.userGroupSearch = [];
             this.groupName = group.text;
-            this.userDataSelected = group.participantGroup;
+            group.participantGroup.forEach(function(pG){
+                self.userDataSelected.push(pG.user);
+            })
         },
         deleteParticipantGroup(group) {
             var self = this;
             ParticipantGroupAPI.deleteParticipantGroup(group.group_id)
             .then ( data => {
-                if ( data == true) {
+                if ( data == true ) {
                     var indexOfParticipant = this.participantGroupList.indexOf(group);
                     self.participantGroupList.splice(indexOfParticipant, 1);
+                    self.userDataSelected = [];
+                    self.userGroupSearch = [];
+                    self.search_participant = "";
+                    self.groupName = "";
                 }
             })
             .catch( err => {
@@ -383,7 +362,6 @@ export default {
         deleteParticipantFromGroup(participantObj) {
             var self = this;
             var Par_group;
-            var indexOfParticipant;
             this.participantGroupList.forEach(function(group){
                 if(group.text == self.groupName){
                     Par_group = group
@@ -391,21 +369,31 @@ export default {
             });
         
             if(Par_group != undefined) {
-                indexOfParticipant = Par_group['participantGroup'].indexOf(participantObj);
-                Par_group['participantGroup'].splice(indexOfParticipant, 1);
-            }
-            else {
-                indexOfParticipant = this.userDataSelected.indexOf(participantObj);
-                this.userDataSelected.splice(indexOfParticipant, 1);
-            }
+                Par_group.participantGroup.forEach(function(pG){
+                    if(pG.user.id == participantObj.id){
+                        MeetingGroupUserAPI.deleteGroupUser(pG.id)
+                        .then( response => {
+                            console.log(response);
+                            var indexOfParticipantGroup = Par_group.participantGroup.indexOf(pG);
+                            Par_group.participantGroup.splice(indexOfParticipantGroup, 1); 
+                        })
+                        .catch( err => {
+                            console.log(err);
+                        });
 
+                    }
+                })
+            }
+            var indexOfParticipant = this.userDataSelected.indexOf(participantObj);
+            this.userDataSelected.splice(indexOfParticipant, 1);
         },
         initialUserData(){
             var self = this;
             UserAPI.user_list()
             .then(data => {
-                self.userData = data;
+                
                 data.forEach(function(user){
+                    self.userData[user.id] = user;
                     self.userDataForSelect.push({'id': user.id, 'text': user.name});
                 });
             })
@@ -436,8 +424,9 @@ export default {
             var self = this;
             MeetingParticipantAPI.getAllParticipants(this.meeting_id)
             .then(data => {
-                console.log(data);
-                self.participants = data.user;
+                if ( data != []) {
+                    self.participants = data;
+                }
             })
             .catch(err => {
                 console.log(err);

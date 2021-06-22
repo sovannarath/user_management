@@ -60,9 +60,9 @@
             <li>
               <a href="#setting_menu" data-toggle="collapse" aria-expanded="false"><i class="fas fa-cogs"></i>System Settngs</a>
                 <ul class="collapse list-unstyled" id="setting_menu">
-                    <li class="main_menu">
+                    <!--li class="main_menu">
                       <router-link to="/settings">General Settings</router-link>
-                    </li>
+                    </li-->
                 </ul>
             </li>
           </ul>

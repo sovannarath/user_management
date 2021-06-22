@@ -25,9 +25,9 @@ export default {
         return {headers: header}
     },
     
-    getAllGroupUsers(group_id) {
+    getAllGroupUsers() {
         return new Promise((resolve, reject) => {
-            axios.get("/meeting-group/" + group_id + "/user",this.httpHeader())
+            axios.get("/meeting-group-user",this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -37,9 +37,9 @@ export default {
         });
     },
     
-    getGroupUser(group_id,user_id) {
+    getGroupUser(id) {
         return new Promise((resolve, reject) => {
-            axios.get("/meeting-group/" + group_id + "/user/" + user_id, this.httpHeader)
+            axios.get("/meeting-group-user/" + id, this.httpHeader)
             .then(response => {
                 resolve(response.data)
             })
@@ -49,9 +49,9 @@ export default {
         })
     },
     
-    createGroupUser(group_id, data) {
+    createGroupUser(data) {
         return new Promise((resolve, reject) => {
-            axios.post("/meeting-group/" + group_id + "/user", data, this.httpHeader())
+            axios.post("/meeting-group-user/", data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -61,9 +61,9 @@ export default {
         });
     },
     
-    updateGroupUser(group_id, user_id, data) {
+    updateGroupUser(id, data) {
         return new Promise((resolve, reject) => {
-            axios.put("/meeting-group/" + group_id + "/user/" + user_id, data, this.httpHeader())
+            axios.put("/meeting-group-user/" + id, data, this.httpHeader())
             .then(response => {
                 resolve(response.data);
             })
@@ -73,9 +73,9 @@ export default {
         });
     },
     
-    deleteGroupUser(group_id, user_id) {
+    deleteGroupUser(id) {
         return new Promise((resolve, reject) => {
-            axios.delete("/meeting-group/" + group_id + "/user/" + user_id, this.httpHeader())
+            axios.delete("/meeting-group-user/" + id, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })

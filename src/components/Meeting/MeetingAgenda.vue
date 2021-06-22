@@ -90,7 +90,7 @@
                 <div class="col col-sm-6">
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="participant" class=" form-control-label">Speaker</label>
-                        <Select2 v-model="dialogSpeakerId['spk-'+ agenda.id]" :options="userDataForSelect" :settings="{ settingOption: value, settingOption: value }" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
+                        <Select2 v-model="dialogSpeakerId['spk-'+ agenda.id]" :options="userDataForSelect" @change="myChangeEvent($event)" @select="mySelectEvent($event)" />
                     </div>
                     <div class="form-group" style="margin-bottom:20px;">
                         <label for="action_type" class=" form-control-label">Type</label>
