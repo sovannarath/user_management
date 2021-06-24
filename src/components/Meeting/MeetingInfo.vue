@@ -32,21 +32,6 @@
                             <input type="date" id="date" v-model="date" name="date" class="form-control">
                         </div>
 
-                        <div class="row">
-                            <div class="col col-md-6">
-                                <div class="form-group">
-                                    <label for="start_time" class=" form-control-label">Start Time</label>
-                                    <input type="time" id="start_time" v-model="start_time" name="start_time" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col col-md-6">
-                                <div class="form-group">
-                                    <label for="end_time" class=" form-control-label">End Time</label>
-                                    <input type="time" id="end_time" v-model="end_time" name="end_time" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label for="comment" class=" form-control-label">Suggestion</label>
                             <textarea v-model="comment" name="comment" id="comment" rows="10" placeholder="Enter suggestion" class="form-control"></textarea>
@@ -72,24 +57,27 @@
                             <label for="meeting_status" class=" form-control-label">Meeting Status</label>
                             <select name="meeting_status" v-model="meeting_status" id="meeting_status" class="form-control">
                                 <option disabled selected value="0">Please select status</option>
-                                <option>Finished</option>
-                                <option>On Hold</option>
-                                <option>Next Schedule</option>
+                                <option v-bind:value="'FINISHED'">Finished</option>
+                                <option v-bind:value="'ON_HOLD'">On Hold</option>
+                                <option v-bind:value="'NEXT_SCHEDULE'">Next Schedule</option>
                             </select>
                         </div>
-                        
-                        <!--div class="form-group">
-                            <label for="next_date" class=" form-control-label">Next Date</label>
-                            <input type="date" id="next_date" v-model="next_date" name="next_date" class="form-control">
+
+                        <div class="row">
+                            <div class="col col-md-6">
+                                <div class="form-group">
+                                    <label for="start_time" class=" form-control-label">Start Time</label>
+                                    <input type="time" id="start_time" v-model="start_time" name="start_time" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col col-md-6">
+                                <div class="form-group">
+                                    <label for="end_time" class=" form-control-label">End Time</label>
+                                    <input type="time" id="end_time" v-model="end_time" name="end_time" class="form-control">
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="next_topic" class=" form-control-label">Next Topic</label>
-                            <input type="text" id="next_topic" v-model="next_topic" name="next_topic" placeholder="Enter next topic" class="form-control">
-                        </div-->
-
-                        <a href="#">Previous meeting ...</a>
-
+                        
                         <div class="form-group">
                             <label for="summary" class=" form-control-label">Summary</label>
                             <textarea v-model="summary" name="summary" id="summary" rows="10" placeholder="Enter summary" class="form-control"></textarea>
@@ -158,7 +146,7 @@ export default {
         },
         updateMeetingInfo() {
             var data = {};
-            data['id'] = this.meeting_id;
+            //data['id'] = this.meeting_id;
             data['name'] = this.topic;
             data['type'] = {"id" : this.meeting_type_id}
             data['project'] = {"id" : this.project_id}
@@ -170,7 +158,7 @@ export default {
             data['end_time'] = this.end_time;
             data['summary'] = this.summary;
             data['comment'] = this.comment;
-        
+            
             MeetingAPI.updateMeeting(data, this.meeting_id)
             .then(response => {
                 console.log(response);

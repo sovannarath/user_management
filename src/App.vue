@@ -22,9 +22,9 @@
                     <router-link to="/users">User Information</router-link>
                   </li>
                   <!--li class="main_menu">
-                    <router-link to="/roles">Role</router-link>
-                  </li>
-                  <li class="main_menu">
+                    <router-link to="/users/profile">Profile</router-link>
+                  </li-->
+                  <!--li class="main_menu">
                     <router-link to="/organizations">Organization</router-link>
                   </li-->
                 </ul>

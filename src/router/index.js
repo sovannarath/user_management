@@ -22,6 +22,7 @@ import MeetingType from '../views/MeetingType.vue'
 import MeetingAction from '../views/MeetingAction.vue'
 import MeetingActionType from '../views/MeetingActionType.vue'
 import MeetingParticipant from '../views/MeetingParticipant.vue'
+import Profile from '../views/users/Profile.vue'
 
 const routes = [
   /*
@@ -53,6 +54,11 @@ const routes = [
     path: '/users/:id/edit',
     name: 'UserFormEdit',
     component: UserForm
+  },
+  {
+    path: '/user-profile/:id',
+    name: 'Profile',
+    component: Profile
   },
   {
     path: '/roles',

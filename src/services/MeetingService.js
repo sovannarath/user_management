@@ -26,7 +26,7 @@ export default {
         */
         return {headers: header}
     },
-    // retrieve all organizations
+    
     allMeetings() {
         return new Promise((resolve, reject) => {
             axios.get('/meetings',this.httpHeader())
@@ -38,7 +38,7 @@ export default {
             });
         });
     },
-    // get a organization
+    
     getMeeting(id) {
         return new Promise((resolve, reject) => {
             axios.get('/meetings/' + id, this.httpHeader)
@@ -50,7 +50,7 @@ export default {
             })
         })
     },
-    // create a organization
+    
     createMeeting(data) {
         return new Promise((resolve, reject) => {
             axios.post('/meetings', data, this.httpHeader())
@@ -62,10 +62,10 @@ export default {
             })
         });
     },
-    //update organization
+    
     updateMeeting(data, id) {
         return new Promise((resolve, reject) => {
-            axios.put('/meetings/' + id, data, this.httpHeader())
+            axios.put('/meetings/' + id , data, this.httpHeader())
             .then(response => {
                 resolve(response.data)
             })
@@ -74,7 +74,7 @@ export default {
             })
         });
     },
-    // Delete organization
+    
     deleteMeeting(id) {
         return new Promise((resolve, reject) => {
             axios.delete('/meetings/' + id, this.httpHeader())

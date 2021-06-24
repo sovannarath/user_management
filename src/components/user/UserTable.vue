@@ -67,7 +67,7 @@
                                     <!--button class="item" data-toggle="tooltip" data-placement="top" title="Send">
                                         <i class="zmdi zmdi-mail-send"></i>
                                     </button-->
-                                    <router-link class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-bind:to="'/users/'+user.id+'/edit'">
+                                    <router-link class="item" data-toggle="tooltip" data-placement="top" title="Edit" v-bind:to="'/user-profile/'+user.id">
                                         <i class="zmdi zmdi-edit"></i>
                                     </router-link>
                                     <!--button class="item" data-toggle="tooltip" data-placement="top" title="Edit">

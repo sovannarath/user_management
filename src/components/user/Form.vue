@@ -30,6 +30,13 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
+        <div v-if="id != ''">
+            <router-link v-bind:to="'/user-profile/' + id">
+                <span class="fa fa-arrow-left"></span>&nbsp;&nbsp;Back to profile
+            </router-link>
+        </div>
+        <br>
+        
         <div class="card">
             <div class="card-header">
                 <strong>User Form</strong>
