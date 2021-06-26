@@ -1,3 +1,3 @@
 export default {
-    url: 'http://localhost:8888'
+    url: 'https://secretary-api-back-office.herokuapp.com'
 }

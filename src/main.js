@@ -25,7 +25,7 @@ import './assets/images/icon/logo.png'
 import './assets/images/icon/avatar-02.jpg'
 
 // Declare global variable
-window.serverHost = 'http://localhost:8888'
+window.serverHost = 'https://secretary-api-back-office.herokuapp.com'
 window.$ = window.jQuery = jQuery
 
 createApp(App).use(router, axios, VueAxios).mount('#app')
